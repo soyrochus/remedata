@@ -18,8 +18,8 @@ remedata
 The basic usage of remedata is to create custom Express routing handlers which allow the automatic loading of one 
 or more files, which then can be treated, though CRUD operations, as in-memory tables and consecutively saved back to
 disk. 
- 
-In the following examples we presume: 
+  
+In the following examples we presume 
  
      var mdata = require('remedata');
      
@@ -54,4 +54,3 @@ For POST, PUT and DELETE 'towrite' can be used. On its basic form it writes the 
 #### The source
 
 Check out the [Docco generated source file](https://github.com/soyrochus/remedata/blob/master/remedata.js)
-
