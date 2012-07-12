@@ -1,5 +1,5 @@
 // ### Remedata.js - easy Express middle-ware to provide json web-services with mock data-access
-// ##### v 0.2 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+// ##### v 0.3 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 // 
 // > Fair License (Fair)
 // > Copyright (c) 2012 Iwan van der Kleijn
@@ -453,7 +453,7 @@ exports.replace = function(record /* record */, data){
 		        o[e] = record[e];
 	        }	    
 	    }
-	    return true;
+	    return record;
     }    
 };
 
@@ -461,9 +461,9 @@ exports.replace = function(record /* record */, data){
 exports.merge = function(record /* record */, data){
 
     if (record.id){
-	    exports.replace(record, data);
+	    return exports.replace(record, data);
     }else {
-	    exports.insert(record, data);
+	    return exports.insert(record, data);
     }
 };
 
