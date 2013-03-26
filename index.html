@@ -1,421 +1,987 @@
-<!DOCTYPE html>  <html> <head>   <title>remedata.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               remedata.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h3>Remedata.js - easy Express middle-ware to provide json web-services with mock data-access</h3>
+<!DOCTYPE html>
 
-<h5>v 0.2 - Documentation generated with the lovely <a href="http://jashkenas.github.com/docco/">Docco</a></h5>
-
+<html>
+<head>
+  <title>remedata.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>remedata.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h3>Remedata.js - easy Express middle-ware to provide json web-services with mock data-access</h3>
+<h5>v 0.3.1 - Documentation generated with the lovely <a href="http://jashkenas.github.com/docco/">Docco</a></h5>
 <blockquote>
-  <p>Fair License (Fair)
-  Copyright (c) 2012 Iwan van der Kleijn</p>
-  
-  <p>Usage of the works is permitted provided that this instrument is retained with the works, so that any entity that uses the works is notified of this instrument.</p>
-  
-  <p>DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h4>Introduction</h4>
+<p>Fair License (Fair)
+Copyright (c) 2013 Iwan van der Kleijn</p>
+<p>Usage of the works is permitted provided that this instrument is retained with the works, so that any entity that uses the works is notified of this instrument.</p>
+<p>DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.</p>
+</blockquote>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h4>Introduction</h4>
 <p>The basic usage of mockdata is to create custom Express routing handlers which allow the automatic loading of one 
 or more files, which then can be treated, though CRUD operations, as in-memory tables and consequentively saved back to
 disk. </p>
-
 <p>In the following examples we presume </p>
-
-<pre><code>var mdata = require('remedata');
-</code></pre>
-
+<pre><code>var mdata = require(&#39;remedata&#39;);</code></pre>
 <p>Two basic forms are supported: </p>
-
-<pre><code>app.get('/test/readuser1', mdata.toread('./json/test1.json'));
-</code></pre>
-
-<p>'toread' returns a ready made routing handler which reads the specified filed (s) and returns them as the service response.</p>
-
-<pre><code>app.get('/test/readuser2', mdata.toread('./json/test1.json', 
+<pre><code>app.get(&#39;/test/readuser1&#39;, mdata.toread(&#39;./json/test1.json&#39;));</code></pre>
+<p>&#39;toread&#39; returns a ready made routing handler which reads the specified filed (s) and returns them as the service response.</p>
+<pre><code>app.get(&#39;/test/readuser2&#39;, mdata.toread(&#39;./json/test1.json&#39;, 
    function(data, req, res){
 
-  var result = mycomplexfunction(data, req.query['parameterx']);
+  var result = mycomplexfunction(data, req.query[&#39;parameterx&#39;]);
   return result;
-}));
-</code></pre>
-
-<p>'toread' with a callback allows for the manipulation of the data to be returned to the client. Remedata supports a small but complete
+}));</code></pre>
+<p>&#39;toread&#39; with a callback allows for the manipulation of the data to be returned to the client. Remedata supports a small but complete
 set of operations to manipulate, sort and filter the data-sets. Sort and filter are compatible with the ExtJS Grid.   </p>
-
-<pre><code>app.post('/test/writeuser1', mdata.towrite('./json/test2.json'));
-</code></pre>
-
-<p>For POST, PUT and DELETE 'towrite' can be used. On its basic form it writes the data send in the request body to the specified file  </p>
-
-<pre><code>app.post('/test/writeuser2', mdata.towrite('./json/test2.json', 
+<pre><code>app.post(&#39;/test/writeuser1&#39;, mdata.towrite(&#39;./json/test2.json&#39;));</code></pre>
+<p>For POST, PUT and DELETE &#39;towrite&#39; can be used. On its basic form it writes the data send in the request body to the specified file  </p>
+<pre><code>app.post(&#39;/test/writeuser2&#39;, mdata.towrite(&#39;./json/test2.json&#39;, 
       function(data, newdata, save, req, res){
 
   var record = mdata.insert(newdata, data);
   save(data);
   return record;
-}));
-</code></pre>
+}));</code></pre>
+<h4>The source</h4>
 
-<h4>The source</h4>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Dependency on the filesystem module &amp; async (load with npm)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
-    <span class="nx">async</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Errors are send to the client as json objects</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">sendError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">){</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">contentType</span><span class="p">(</span><span class="s1">&#39;application/json&#39;</span><span class="p">);</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="o">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">});</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Non-error response by default are treated as json; other data-types can be send by using res.send from
-within the function handlers</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">sendResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">contentType</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">contentType</span><span class="p">(</span><span class="nx">contentType</span><span class="p">);</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">)){</span>
-		<span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="o">:</span> <span class="nx">data</span><span class="p">});</span>                                                       
-	<span class="p">}</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>File reads are sequenced using the async library. In order for this to work, the actual call to fs.readFile neads to be 
-captured in a closure</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">makeReader</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">){</span>
-    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">){</span>
-        <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-    <span class="p">};</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>One or multiple files can be read. Once all files are loaded, the loaded data is passed to 'callback'</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">callback</span><span class="p">){</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">paths</span><span class="p">)){</span>
-      <span class="nx">paths</span> <span class="o">=</span> <span class="p">[</span><span class="nx">paths</span><span class="p">];</span>
-  <span class="p">}</span>
-  <span class="kd">var</span> <span class="nx">readers</span> <span class="o">=</span> <span class="nx">paths</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">){</span>
-                              <span class="k">return</span> <span class="nx">makeReader</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">);</span>
-                          <span class="p">});</span>
-  <span class="nx">async</span><span class="p">.</span><span class="nx">parallel</span><span class="p">(</span><span class="nx">readers</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>With 'towrite' the central function in the Remedata API. Returns a Express routing handler which facilitates the automatic loading
-of the files specified in 'paths'. Either a single string should be assigned, denoting a single file path, or an array of String. 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Dependency on the filesystem module &amp; async (load with npm)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> fs = require(<span class="string">'fs'</span>),
+    async = require(<span class="string">'async'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Errors are send to the client as json objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> sendError = <span class="keyword">function</span>(res, err){
+    res.contentType(<span class="string">'application/json'</span>);
+    console.log(err);
+    res.send({<span class="string">'success'</span>: <span class="literal">false</span>, <span class="string">'error'</span>: err.message});
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Non-error response by default are treated as json; other data-types can be send by using res.send from
+within the function handlers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> sendResponse = <span class="keyword">function</span>(contentType, data, res){
+    res.contentType(contentType);
+	<span class="keyword">if</span> (data.hasOwnProperty(<span class="string">'success'</span>)){
+		res.send(data);
+	} <span class="keyword">else</span> {
+        res.send({<span class="string">'success'</span>: <span class="literal">true</span>, <span class="string">'data'</span>: data});                                                       
+	}
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>File reads are sequenced using the async library. In order for this to work, the actual call to fs.readFile neads to be 
+captured in a closure</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> makeReader = <span class="keyword">function</span>(path, encoding){
+    <span class="keyword">return</span> <span class="keyword">function</span>(callback){
+        fs.readFile(path, encoding, callback);
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>One or multiple files can be read. Once all files are loaded, the loaded data is passed to &#39;callback&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.read = <span class="keyword">function</span>(paths, encoding, callback){
+  <span class="keyword">if</span> (!Array.isArray(paths)){
+      paths = [paths];
+  }
+  <span class="keyword">var</span> readers = paths.map(<span class="keyword">function</span>(path){
+                              <span class="keyword">return</span> makeReader(path, encoding);
+                          });
+  async.parallel(readers, callback);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>With &#39;towrite&#39; the central function in the Remedata API. Returns a Express routing handler which facilitates the automatic loading
+of the files specified in &#39;paths&#39;. Either a single string should be assigned, denoting a single file path, or an array of String. 
 After loading of the file(s), the data loaded from the files is send back to the client if no callback has been specified.
-If a callback function 'f' has been specified, this will be called after all data has been loaded. 
-'Encoding' determines the encoding of the files to be read. 
-By default it is set to 'utf-8'. 'ContentType' determines the HTTP response header which is send back to the client. 
-By default it is set to  'application/json'.</p>
-
+If a callback function &#39;f&#39; has been specified, this will be called after all data has been loaded. 
+&#39;Encoding&#39; determines the encoding of the files to be read. 
+By default it is set to &#39;utf-8&#39;. &#39;ContentType&#39; determines the HTTP response header which is send back to the client. 
+By default it is set to  &#39;application/json&#39;.</p>
 <p>The callback function support the following parameters:</p>
-
 <ul>
-<li>data - The data loaded from the file or files specified in 'paths'.</li>
+<li>data - The data loaded from the file or files specified in &#39;paths&#39;.</li>
 <li>req  - The Node/Express request object</li>
 <li>res  - The Node/Request response object</li>
 </ul>
+<p>The function result is send back to the client. Any data is encapsulated in the &quot;data&quot; property of an object containing 
+the property &quot;success&quot;. If the result is an object containing the property &quot;success&quot; than solely the object is returned. 
+Alternatively, res.send can be used to send data back the the client. In this case the function return should be void (undefined).</p>
 
-<p>The function result is send back to the client. Any data is encapsulated in the "data" property of an object containing 
-the property "success". If the result is an object containing the property "success" than solely the object is returned. 
-Alternatively, res.send can be used to send data back the the client. In this case the function return should be void (undefined).</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">toread</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">){</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>utf-8 and 'application/json' are specified by default. Note that all functions returning data will use json.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">f</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">){</span>
-        <span class="nx">contentType</span> <span class="o">=</span> <span class="nx">encoding</span>  <span class="o">||</span> <span class="s1">&#39;application/json&#39;</span><span class="p">;</span>
-        <span class="nx">encoding</span> <span class="o">=</span> <span class="nx">f</span> <span class="o">||</span> <span class="s1">&#39;utf8&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>If no callback function is set, a default is used which just returns the passed data,</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">f</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fdata</span><span class="p">){</span> <span class="k">return</span> <span class="nx">fdata</span><span class="p">;</span> <span class="p">};</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">encoding</span> <span class="o">=</span> <span class="nx">encoding</span> <span class="o">||</span> <span class="s1">&#39;utf8&#39;</span><span class="p">;</span>
-        <span class="nx">contentType</span> <span class="o">=</span> <span class="nx">contentType</span>  <span class="o">||</span> <span class="s1">&#39;application/json&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.toread = <span class="keyword">function</span>(paths, f, encoding, contentType){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>utf-8 and &#39;application/json&#39; are specified by default. Note that all functions returning data will use json.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (<span class="keyword">typeof</span> f !== <span class="string">'function'</span>){
+        contentType = encoding  || <span class="string">'application/json'</span>;
+        encoding = f || <span class="string">'utf8'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>If no callback function is set, a default is used which just returns the passed data,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        f = <span class="keyword">function</span>(fdata){ <span class="keyword">return</span> fdata; };
+    } <span class="keyword">else</span> {
+        encoding = encoding || <span class="string">'utf8'</span>;
+        contentType = contentType  || <span class="string">'application/json'</span>;
+    }
    
-    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Load one of more files, specified in paths, and pass them to the callback specified in 'toread' once al
-data has been loaded</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">exports</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">){</span>
+    <span class="keyword">return</span> <span class="keyword">function</span>(req, res){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Load one of more files, specified in paths, and pass them to the callback specified in &#39;toread&#39; once al
+data has been loaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        exports.read(paths, encoding, <span class="keyword">function</span>(err, results){
                         
-                        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="nx">sendError</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-                        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>All data read from files is converted to Javascript objects</p>             </td>             <td class="code">               <div class="highlight"><pre>                            <span class="nx">results</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-                                                      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-                                                  <span class="p">});</span>
-                            <span class="k">try</span><span class="p">{</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">paths</span><span class="p">)){</span>
-                                    <span class="nx">results</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-                                <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>The data loaded from the files is passed to the callback specified in 'toread' 
-as an array in case multiple files have been specified</p>             </td>             <td class="code">               <div class="highlight"><pre>                                <span class="kd">var</span> <span class="nx">fdata</span> <span class="o">=</span> <span class="nx">f</span><span class="p">(</span><span class="nx">results</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>                       </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>In case there the callback has returned data, this should be send back to the client</p>             </td>             <td class="code">               <div class="highlight"><pre>                                <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">fdata</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">){</span>
-                                    <span class="nx">sendResponse</span><span class="p">(</span><span class="nx">contentType</span><span class="p">,</span> <span class="nx">fdata</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
-                                <span class="p">}</span> 
-                            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-                                <span class="nx">sendError</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-                                <span class="k">return</span><span class="p">;</span> 
-                                <span class="cm">/* STOP */</span>                                
-                            <span class="p">}</span>
-                        <span class="p">}</span>
-                     <span class="p">});</span>
-    <span class="p">};</span>
-<span class="p">};</span>
+                        <span class="keyword">if</span> (err) {
+                            sendError(res, err);
+                        } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>All data read from files is converted to Javascript objects</p>
 
-<span class="cm">/* -------------------------------------------------------- */</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>File writes are sequenced using the async library. In order for this to work, the actual call to fs.writeFile neads to be 
-captured in a closure</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">makeWriter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">){</span>
-    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">){</span>
-        <span class="k">if</span><span class="p">((</span><span class="k">typeof</span> <span class="nx">data</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">data</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)){</span>
-            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
-            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>One or multiple files can be written to the file system. Once all files have been written, the callback
-is called. In remedata this is used to send data back to the client</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">write</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">callback</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            results = results.map(<span class="keyword">function</span>(e){
+                                                      <span class="keyword">return</span> JSON.parse(e);
+                                                  });
+                            <span class="keyword">try</span>{
+                                <span class="keyword">if</span> (!Array.isArray(paths)){
+                                    results = results[<span class="number">0</span>];
+                                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>The data loaded from the files is passed to the callback specified in &#39;toread&#39; 
+as an array in case multiple files have been specified</p>
 
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">paths</span><span class="p">)){</span>
-        <span class="nx">paths</span> <span class="o">=</span> <span class="p">[</span><span class="nx">paths</span><span class="p">];</span>
-        <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="nx">data</span><span class="p">];</span>
-    <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                <span class="keyword">var</span> fdata = f(results, req, res);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>In case there the callback has returned data, this should be send back to the client</p>
 
-    <span class="kd">var</span> <span class="nx">writers</span> <span class="o">=</span> <span class="nx">paths</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">index</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                <span class="keyword">if</span> (<span class="keyword">typeof</span> fdata !== <span class="string">'undefined'</span>){
+                                    sendResponse(contentType, fdata, res);
+                                } 
+                            } <span class="keyword">catch</span> (err) {
+                                sendError(res, err);
+                                <span class="keyword">return</span>; 
+                                <span class="comment">/* STOP */</span>                                
+                            }
+                        }
+                     });
+    };
+};
+
+<span class="comment">/* -------------------------------------------------------- */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>File writes are sequenced using the async library. In order for this to work, the actual call to fs.writeFile neads to be 
+captured in a closure</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> makeWriter = <span class="keyword">function</span>(path, data, encoding){
+    <span class="keyword">return</span> <span class="keyword">function</span>(callback){
+        <span class="keyword">if</span>((<span class="keyword">typeof</span> data === <span class="string">'undefined'</span>) || (data === <span class="literal">null</span>)){
+            callback(<span class="literal">null</span>, data);
+        }<span class="keyword">else</span> {
+            fs.writeFile(path, JSON.stringify(data), encoding, callback);
+        }
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>One or multiple files can be written to the file system. Once all files have been written, the callback
+is called. In remedata this is used to send data back to the client</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.write = <span class="keyword">function</span>(paths, data, encoding, callback){
+
+    <span class="keyword">if</span> (!Array.isArray(paths)){
+        paths = [paths];
+        data = [data];
+    }
+
+    <span class="keyword">var</span> writers = paths.map(<span class="keyword">function</span>(path, index){
                                 
-                                <span class="k">return</span> <span class="nx">makeWriter</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">data</span><span class="p">[</span><span class="nx">index</span><span class="p">],</span> <span class="nx">encoding</span><span class="p">);</span>
-                            <span class="p">});</span>
+                                <span class="keyword">return</span> makeWriter(path, data[index], encoding);
+                            });
   
-    <span class="nx">async</span><span class="p">.</span><span class="nx">parallel</span><span class="p">(</span><span class="nx">writers</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>With 'toread' the central function in the Remedata API. Returns a Express routing handler which facilitates the automatic loading
-of the files specified in 'paths'. Data can be written automatically or on demand to these files. Either a single string should 
+    async.parallel(writers, callback);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>With &#39;toread&#39; the central function in the Remedata API. Returns a Express routing handler which facilitates the automatic loading
+of the files specified in &#39;paths&#39;. Data can be written automatically or on demand to these files. Either a single string should 
 be assigned, denoting a single file path, or an array of String. 
 After loading of the file(s), the send data,  the request body, is written to the specified files if no callback is specified. 
 It is important that the data is send as an array if multiple files are specified, with each node in the array is written to the 
-corresponding file in 'paths'. In case a callback function 'f' is specified, this is called after all files have been loaded. 
-'Encoding' determines the encoding of the files to be read and to be written 
-By default it is set to 'utf-8'. 'ContentType' determines the HTTP response header which is send back to the client. 
-By default it is set to  'application/json'.</p>
-
+corresponding file in &#39;paths&#39;. In case a callback function &#39;f&#39; is specified, this is called after all files have been loaded. 
+&#39;Encoding&#39; determines the encoding of the files to be read and to be written 
+By default it is set to &#39;utf-8&#39;. &#39;ContentType&#39; determines the HTTP response header which is send back to the client. 
+By default it is set to  &#39;application/json&#39;.</p>
 <p>The callback function support the following parameters:</p>
-
 <ul>
-<li>data - The data loaded from the file or files specified in 'paths'.</li>
+<li>data - The data loaded from the file or files specified in &#39;paths&#39;.</li>
 <li>newdata - The data send in the request body</li>
-<li>saveF - function to save the data. This shoulld be an array if multiple files have been defined in 'paths', which each node 
-containing data which will be written to the corresponding file in 'paths' </li>
+<li>saveF - function to save the data. This shoulld be an array if multiple files have been defined in &#39;paths&#39;, which each node 
+containing data which will be written to the corresponding file in &#39;paths&#39; </li>
 <li>req  - The Node/Express request object</li>
 <li>res  - The Node/Request response object</li>
 </ul>
+<p>The function result is send back to the client. Any data is encapsulated in the &quot;data&quot; property of an object containing 
+the property &quot;success&quot;. If the result is an object containing the property &quot;success&quot; than solely the object is returned. 
+Alternatively, res.send can be used to send data back the the client. In this case the function return should be void (undefined).</p>
 
-<p>The function result is send back to the client. Any data is encapsulated in the "data" property of an object containing 
-the property "success". If the result is an object containing the property "success" than solely the object is returned. 
-Alternatively, res.send can be used to send data back the the client. In this case the function return should be void (undefined).</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">towrite</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.towrite = <span class="keyword">function</span>(paths, f, encoding, contentType){
 
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">f</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">){</span>
-        <span class="nx">contentType</span> <span class="o">=</span> <span class="nx">encoding</span>  <span class="o">||</span> <span class="s1">&#39;application/json&#39;</span><span class="p">;</span>
-        <span class="nx">encoding</span> <span class="o">=</span> <span class="nx">f</span> <span class="o">||</span> <span class="s1">&#39;utf8&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>If ''towrite'' has no function handler set, the default action is to overwrite the file(s) specified in ''paths'' with the content
-of the POST-ed data. In case that multiple paths are specified (through an array of path expressions), ''newdata'' should evaluate to an array as well</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">f</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fdata</span><span class="p">,</span> <span class="nx">newdata</span><span class="p">,</span> <span class="nx">save</span><span class="p">){</span> </pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>overwrite specified files with send data</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">return</span> <span class="nx">save</span><span class="p">(</span><span class="nx">newdata</span><span class="p">);</span>            
-        <span class="p">};</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">encoding</span> <span class="o">=</span> <span class="nx">encoding</span> <span class="o">||</span> <span class="s1">&#39;utf8&#39;</span><span class="p">;</span>
-        <span class="nx">contentType</span> <span class="o">=</span> <span class="nx">contentType</span>  <span class="o">||</span> <span class="s1">&#39;application/json&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-   </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>return Connect middleware for Express</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">newdata</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Load one of more files, specified in paths, and pass them to the callback specified in 'towrite' once al
-data has been loaded</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">exports</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">){</span>
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> f !== <span class="string">'function'</span>){
+        contentType = encoding  || <span class="string">'application/json'</span>;
+        encoding = f || <span class="string">'utf8'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>If &#39;&#39;towrite&#39;&#39; has no function handler set, the default action is to overwrite the file(s) specified in &#39;&#39;paths&#39;&#39; with the content
+of the POST-ed data. In case that multiple paths are specified (through an array of path expressions), &#39;&#39;newdata&#39;&#39; should evaluate to an array as well</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        f = <span class="keyword">function</span>(fdata, newdata, save){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>overwrite specified files with send data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> save(newdata);            
+        };
+    } <span class="keyword">else</span> {
+        encoding = encoding || <span class="string">'utf8'</span>;
+        contentType = contentType  || <span class="string">'application/json'</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>return Connect middleware for Express</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="keyword">function</span>(req, res) {
+        <span class="keyword">var</span> newdata = req.body;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Load one of more files, specified in paths, and pass them to the callback specified in &#39;towrite&#39; once al
+data has been loaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        exports.read(paths, encoding, <span class="keyword">function</span>(err, results){
                          
-                         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-                             <span class="nx">sendError</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-                         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>All data read from files is converted to Javascript objects</p>             </td>             <td class="code">               <div class="highlight"><pre>                             <span class="nx">results</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-                                                       <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-                                                   <span class="p">});</span>
-                             
-                             <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">paths</span><span class="p">)){</span>
-                                 <span class="nx">results</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-                             <span class="p">}</span>
-                             <span class="k">try</span><span class="p">{</span>
-                                 <span class="kd">var</span> <span class="nx">saved</span><span class="p">;</span>
-                                 <span class="kd">var</span> <span class="nx">saveF</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-                                     <span class="nx">saved</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-                                     <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
-                                 <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>callback function. The data returned is send back to the client
-the data to be written to the files is captured in the free variable 'saved'
-contained in the closure when the function is assigned to saveF</p>             </td>             <td class="code">               <div class="highlight"><pre>                                 <span class="kd">var</span> <span class="nx">fdata</span> <span class="o">=</span> <span class="nx">f</span><span class="p">(</span><span class="nx">results</span><span class="p">,</span> <span class="nx">newdata</span><span class="p">,</span> <span class="nx">saveF</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>                                                                                               
-                                 <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">fdata</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">){</span>
-                                     <span class="nx">fdata</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kc">true</span><span class="p">};</span>
-                                 <span class="p">}</span>
+                         <span class="keyword">if</span> (err) {
+                             sendError(res, err);
+                         } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>All data read from files is converted to Javascript objects</p>
 
-                             <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">errx</span><span class="p">)</span> <span class="p">{</span>
-                                 <span class="nx">sendError</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">errx</span><span class="p">);</span>
-                                 <span class="k">return</span><span class="p">;</span> <span class="cm">/* STOP in case of errors*/</span>
-                             <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                             results = results.map(<span class="keyword">function</span>(e){
+                                                       <span class="keyword">return</span> JSON.parse(e);
+                                                   });
                              
-                             <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">saved</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">){</span>   </pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Sequence storage of data to the files specified in 'paths'</p>             </td>             <td class="code">               <div class="highlight"><pre>                                 <span class="nx">exports</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">paths</span><span class="p">,</span> <span class="nx">saved</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">){</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>After the last file has been written, 
+                             <span class="keyword">if</span> (!Array.isArray(paths)){
+                                 results = results[<span class="number">0</span>];
+                             }
+                             <span class="keyword">try</span>{
+                                 <span class="keyword">var</span> saved;
+                                 <span class="keyword">var</span> saveF = <span class="keyword">function</span>(data){
+                                     saved = data;
+                                     <span class="keyword">return</span> data;
+                                 };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>callback function. The data returned is send back to the client
+the data to be written to the files is captured in the free variable &#39;saved&#39;
+contained in the closure when the function is assigned to saveF</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                 <span class="keyword">var</span> fdata = f(results, newdata, saveF, req, res);                                                                                               
+                                 <span class="keyword">if</span> (<span class="keyword">typeof</span> fdata === <span class="string">'undefined'</span>){
+                                     fdata = {success: <span class="literal">true</span>};
+                                 }
+
+                             } <span class="keyword">catch</span> (errx) {
+                                 sendError(res, errx);
+                                 <span class="keyword">return</span>; <span class="comment">/* STOP in case of errors*/</span>
+                             }
+                             
+                             <span class="keyword">if</span> (<span class="keyword">typeof</span> saved !== <span class="string">'undefined'</span>){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Sequence storage of data to the files specified in &#39;paths&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                 exports.write(paths, saved, encoding, <span class="keyword">function</span>(err){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>After the last file has been written, 
 the function result (or error info) is send
-back to the client</p>             </td>             <td class="code">               <div class="highlight"><pre>                                                   <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">){</span>
-                                                       <span class="nx">sendError</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>                                                   
-                                                   <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
-                                                       <span class="nx">sendResponse</span><span class="p">(</span><span class="nx">contentType</span><span class="p">,</span> <span class="nx">fdata</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
-                                                   <span class="p">}</span>
-                                               <span class="p">});</span>                                 
-                             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                                 <span class="nx">sendResponse</span><span class="p">(</span><span class="nx">contentType</span><span class="p">,</span> <span class="nx">fdata</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
-                             <span class="p">}</span>
-                         <span class="p">}</span>
-                     <span class="p">});</span>
-    <span class="p">};</span>
-<span class="p">};</span>
+back to the client</p>
 
-<span class="cm">/* -------------------------------------------------------- */</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                                   <span class="keyword">if</span> (err){
+                                                       sendError(res, err);                                                   
+                                                   }<span class="keyword">else</span> {
+                                                       sendResponse(contentType, fdata, res);
+                                                   }
+                                               });                                 
+                             } <span class="keyword">else</span> {
+                                 sendResponse(contentType, fdata, res);
+                             }
+                         }
+                     });
+    };
+};
 
-<span class="kd">var</span> <span class="nx">writeFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">){</span>
-	                 <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">){</span>
-	                     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-	                 <span class="p">}</span>
-                 <span class="p">});</span>
-<span class="p">};</span>
+<span class="comment">/* -------------------------------------------------------- */</span>
 
-<span class="kd">var</span> <span class="nx">shallowCopy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">){</span>
+<span class="keyword">var</span> writeFile = <span class="keyword">function</span>(path, data){
+    fs.writeFile(path, JSON.stringify(data), <span class="keyword">function</span>(err){
+	                 <span class="keyword">if</span> (err){
+	                     console.log(err);
+	                 }
+                 });
+};
 
-    <span class="kd">var</span> <span class="nx">n_</span> <span class="o">=</span> <span class="p">{};</span>
-    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">e</span> <span class="k">in</span> <span class="nx">o</span><span class="p">){</span>
-	    <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">e</span><span class="p">)){</span>
-	        <span class="nx">n_</span><span class="p">[</span><span class="nx">e</span><span class="p">]</span> <span class="o">=</span> <span class="nx">o</span><span class="p">[</span><span class="nx">e</span><span class="p">];</span>
-	    <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">n_</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>partition array and transform into object with metadata used to provide paging of webservice results </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">pageresult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">dataprop</span><span class="p">,</span> <span class="nx">totalprop</span><span class="p">){</span>
+<span class="keyword">var</span> shallowCopy = <span class="keyword">function</span>(o){
 
-    <span class="nx">dataprop</span> <span class="o">=</span> <span class="nx">dataprop</span> <span class="o">||</span> <span class="s1">&#39;data&#39;</span><span class="p">;</span>
-    <span class="nx">totalprop</span> <span class="o">=</span> <span class="nx">totalprop</span> <span class="o">||</span> <span class="s1">&#39;total&#39;</span><span class="p">;</span>
+    <span class="keyword">var</span> n_ = {};
+    <span class="keyword">for</span>(<span class="keyword">var</span> e <span class="keyword">in</span> o){
+	    <span class="keyword">if</span> (o.hasOwnProperty(e)){
+	        n_[e] = o[e];
+	    }
+    }
+    <span class="keyword">return</span> n_;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>partition array and transform into object with metadata used to provide paging of webservice results </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> pageresult = <span class="keyword">function</span>(data, start, limit, dataprop, totalprop){
+
+    dataprop = dataprop || <span class="string">'data'</span>;
+    totalprop = totalprop || <span class="string">'total'</span>;
     
-    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kc">true</span><span class="p">};</span>
-    <span class="nx">res</span><span class="p">[</span><span class="nx">totalprop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-    <span class="nx">start</span> <span class="o">=</span> <span class="nx">start</span> <span class="o">-</span> <span class="mi">0</span> <span class="p">;</span> <span class="c1">//Number(start);</span>
-    <span class="nx">limit</span> <span class="o">=</span> <span class="nx">limit</span> <span class="o">-</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//Number(limit);</span>
-    <span class="kd">var</span> <span class="nx">end</span> <span class="o">=</span> <span class="p">(</span><span class="nx">start</span> <span class="o">+</span> <span class="nx">limit</span><span class="p">);</span>
+    <span class="keyword">var</span> res = {success: <span class="literal">true</span>};
+    res[totalprop] = data.length;
+    start = start - <span class="number">0</span> ; <span class="comment">//Number(start);</span>
+    limit = limit - <span class="number">0</span>; <span class="comment">//Number(limit);</span>
+    <span class="keyword">var</span> end = (start + limit);
  
-    <span class="k">if</span> <span class="p">(</span><span class="nx">end</span> <span class="o">&gt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">){</span>
-	    <span class="nx">res</span><span class="p">[</span><span class="nx">dataprop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">start</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-	    <span class="nx">res</span><span class="p">[</span><span class="nx">dataprop</span><span class="p">]</span><span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
-    <span class="p">}</span>  
-    <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Filter array of objects where 'filterBy' contains the name of the property to search and 'filterOn' the
-search term</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">filteron</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">filterOn</span><span class="p">,</span> <span class="nx">filterBy</span><span class="p">){</span>
+    <span class="keyword">if</span> (end &gt; data.length){
+	    res[dataprop] = data.slice(start);
+    } <span class="keyword">else</span> {
+	    res[dataprop]= data.slice(start, end);
+    }  
+    <span class="keyword">return</span> res;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Filter array of objects where &#39;filterBy&#39; contains the name of the property to search and &#39;filterOn&#39; the
+search term</p>
 
-    <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.filteron = <span class="keyword">function</span>(data, filterOn, filterBy){
+
+    <span class="keyword">return</span> data.filter(<span class="keyword">function</span>(e){
                          
-                           <span class="k">return</span> <span class="nx">e</span><span class="p">[</span><span class="nx">filterBy</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">search</span><span class="p">(</span><span class="nx">filterOn</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span>
-                       <span class="p">});</span> 
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Filter array of objects where the request parameters 'filterBy'and 'filterOn' determine the filter</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">filter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">req</span><span class="p">){</span>
+                           <span class="keyword">return</span> e[filterBy].toLowerCase().search(filterOn.toLowerCase()) &gt;= <span class="number">0</span>;
+                       }); 
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Filter array of objects where the request parameters &#39;filterBy&#39;and &#39;filterOn&#39; determine the filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.filter = <span class="keyword">function</span>(data, req){
     
-    <span class="kd">var</span> <span class="nx">filterOn</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s1">&#39;filterOn&#39;</span><span class="p">];</span>
-    <span class="kd">var</span> <span class="nx">filterBy</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s1">&#39;filterBy&#39;</span><span class="p">];</span>     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filterOn</span> <span class="o">&amp;&amp;</span> <span class="nx">filterBy</span><span class="p">){</span>
+    <span class="keyword">var</span> filterOn = req.query[<span class="string">'filterOn'</span>];
+    <span class="keyword">var</span> filterBy = req.query[<span class="string">'filterBy'</span>];     
+    <span class="keyword">if</span> (filterOn &amp;&amp; filterBy){
     
-       <span class="k">return</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">filteron</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">filterOn</span><span class="p">,</span> <span class="nx">filterBy</span><span class="p">);</span>   
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
+       <span class="keyword">return</span> exports.filteron(data, filterOn, filterBy);   
+    } <span class="keyword">else</span> {
+        <span class="keyword">return</span> data;
+    }
+};
 
-<span class="nx">exports</span><span class="p">.</span><span class="nx">ASCENDING</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="nx">exports</span><span class="p">.</span><span class="nx">ASC</span> <span class="o">=</span> <span class="s1">&#39;ASC&#39;</span><span class="p">;</span>
-<span class="nx">exports</span><span class="p">.</span><span class="nx">DESCENDING</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="nx">exports</span><span class="p">.</span><span class="nx">DESC</span> <span class="o">=</span> <span class="s1">&#39;DESC&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">sort</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">req</span><span class="p">){</span>
-   <span class="kd">var</span> <span class="nx">_sort</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s1">&#39;sort&#39;</span><span class="p">];</span>
+exports.ASCENDING = <span class="number">1</span>;
+exports.ASC = <span class="string">'ASC'</span>;
+exports.DESCENDING = -<span class="number">1</span>;
+exports.DESC = <span class="string">'DESC'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.sort = <span class="keyword">function</span>(data, req){
+   <span class="keyword">var</span> _sort = req.query[<span class="string">'sort'</span>];
 
-   <span class="k">if</span><span class="p">(</span><span class="nx">_sort</span><span class="p">){</span>
-       <span class="nx">_sort</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">_sort</span><span class="p">);</span>
-       <span class="k">return</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">sorton</span><span class="p">(</span><span class="nx">_sort</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">property</span><span class="p">,</span> <span class="nx">_sort</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">direction</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-       <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
-   <span class="p">}</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Sort array of objects where 'prop' contains the property to sort on and 'order' can be either ASC or DESC </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">sorton</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prop</span><span class="p">,</span> <span class="nx">order</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>The sort is performed on a shallow copy of the original array</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">newdata</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>    
-    <span class="nx">newdata</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+   <span class="keyword">if</span>(_sort){
+       _sort = JSON.parse(_sort);
+       <span class="keyword">return</span> exports.sorton(_sort[<span class="number">0</span>].property, _sort[<span class="number">0</span>].direction, data);
+   } <span class="keyword">else</span> {
+       <span class="keyword">return</span> data;
+   }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Sort array of objects where &#39;prop&#39; contains the property to sort on and &#39;order&#39; can be either ASC or DESC </p>
 
-                  <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="nx">b</span><span class="p">[</span><span class="nx">prop</span><span class="p">]){</span>
-                          <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-                  <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.sorton = <span class="keyword">function</span>(prop, order, data){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>The sort is performed on a shallow copy of the original array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> newdata = data.slice(<span class="number">0</span>);    
+    newdata.sort(<span class="keyword">function</span>(a, b){
+
+                  <span class="keyword">if</span> (a[prop] == b[prop]){
+                          <span class="keyword">return</span> <span class="number">0</span>;
+                  }
                   
-                  <span class="k">if</span> <span class="p">((</span><span class="nx">order</span> <span class="o">===</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">ASCENDING</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">order</span> <span class="o">===</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">ASC</span><span class="p">)){</span>
-                      <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">b</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-                  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                      <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-                  <span class="p">}</span>
-              <span class="p">});</span>
+                  <span class="keyword">if</span> ((order === exports.ASCENDING) || (order === exports.ASC)){
+                      <span class="keyword">return</span> (a[prop] &gt; b[prop]) ? <span class="number">1</span> : -<span class="number">1</span>;
+                  } <span class="keyword">else</span> {
+                      <span class="keyword">return</span> (a[prop] &lt; b[prop]) ? <span class="number">1</span> : -<span class="number">1</span>;
+                  }
+              });
 
-    <span class="k">return</span> <span class="nx">newdata</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>page data compatible with Ext JS 3/4</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">page</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">req</span><span class="p">){</span>
-    <span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">limit</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>     
+    <span class="keyword">return</span> newdata;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>page data compatible with Ext JS 3/4</p>
 
-    <span class="k">return</span> <span class="nx">pageresult</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">limit</span><span class="p">);</span>       
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Generate new id based on the information contained in 'data', an array of objects. THe function will search for the highest id
-and use the increment of this value as the new id</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">newId</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-    <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">e</span><span class="p">){</span>
-	                         <span class="k">return</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">id</span> <span class="o">&gt;</span> <span class="nx">i</span><span class="p">)</span><span class="o">?</span> <span class="nx">e</span><span class="p">.</span><span class="nx">id</span> <span class="o">:</span> <span class="nx">i</span><span class="p">;</span>
-                         <span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>   
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Insert a new object/record in 'data', an array of objects, assigning a new id to the record</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">insert</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-    <span class="nx">record</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">newId</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-    <span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">record</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">record</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>find and object in 'data', an array of objects, where 'tofind' is either the value of 'id' or an object containing 
-property 'id' </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">find</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tofind</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.page = <span class="keyword">function</span>(data, req){
+    <span class="keyword">var</span> start = req.query[<span class="string">'start'</span>] || <span class="number">0</span>;
+    <span class="keyword">var</span> limit = req.query[<span class="string">'limit'</span>] || data.length;     
 
-    <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">tofind</span><span class="p">.</span><span class="nx">id</span> <span class="o">||</span> <span class="nx">tofind</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>  
-    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="keyword">return</span> pageresult(data, start, limit);       
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Generate new id based on the information contained in &#39;data&#39;, an array of objects. THe function will search for the highest id
+and use the increment of this value as the new id</p>
 
-	    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">id</span> <span class="o">==</span> <span class="nx">id</span><span class="p">){</span>
-	        <span class="nx">index</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-	    <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">index</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>removed an object from 'data', an array of objects, where 'todelete' is either the value of 'id' or an object containing 
-property 'id' </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">todelete</span> <span class="cm">/* record | id */</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> newId = <span class="keyword">function</span>(data){
+    <span class="keyword">var</span> id = data.reduce(<span class="keyword">function</span>(i, e){
+	                         <span class="keyword">return</span> (e.id &gt; i)? e.id : i;
+                         }, <span class="number">0</span>);
+    <span class="keyword">return</span> id + <span class="number">1</span>;   
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Insert a new object/record in &#39;data&#39;, an array of objects, assigning a new id to the record</p>
 
-    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">todelete</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.insert = <span class="keyword">function</span>(record, data){
+    record.id = newId(data);
+    data.push(record);
+    <span class="keyword">return</span> record;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>find and object in &#39;data&#39;, an array of objects, where &#39;tofind&#39; is either the value of &#39;id&#39; or an object containing 
+property &#39;id&#39; </p>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-	    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-	    <span class="nx">data</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-	    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="p">}</span>    
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Replaces an object from 'data', an array of objects, with 'record' which should contain a property 'id' existing
-in the data array</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">replace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">record</span> <span class="cm">/* record */</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.find = <span class="keyword">function</span>(tofind, data){
 
-    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="keyword">var</span> id = tofind.id || tofind;
+    <span class="keyword">var</span> index = -<span class="number">1</span>;  
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; data.length; i++){
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
-	    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-	    <span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">index</span><span class="p">];</span>
-	    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">e</span> <span class="k">in</span> <span class="nx">record</span><span class="p">){</span>
-	        <span class="k">if</span> <span class="p">(</span><span class="nx">record</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">e</span><span class="p">)){</span>
-		        <span class="nx">o</span><span class="p">[</span><span class="nx">e</span><span class="p">]</span> <span class="o">=</span> <span class="nx">record</span><span class="p">[</span><span class="nx">e</span><span class="p">];</span>
-	        <span class="p">}</span>	    
-	    <span class="p">}</span>
-	    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="p">}</span>    
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Inserts a record into 'data' (when new) or replaces an object from 'data' (when already existing). </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">merge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">record</span> <span class="cm">/* record */</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
+	    <span class="keyword">if</span> (data[i].id == id){
+	        index = i;
+            <span class="keyword">break</span>;
+	    }
+    }
+    <span class="keyword">return</span> index;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>removed an object from &#39;data&#39;, an array of objects, where &#39;todelete&#39; is either the value of &#39;id&#39; or an object containing 
+property &#39;id&#39; </p>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">record</span><span class="p">.</span><span class="nx">id</span><span class="p">){</span>
-	    <span class="nx">exports</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-    <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
-	    <span class="nx">exports</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>Generates data written to file name 'file-path-to-write' containing a json array with 'n' number of nodes. 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.remove = <span class="keyword">function</span>(todelete <span class="comment">/* record | id */</span>, data){
+
+    <span class="keyword">var</span> index = exports.find(todelete, data);
+
+    <span class="keyword">if</span> (index == -<span class="number">1</span>){
+	    <span class="keyword">return</span> <span class="literal">false</span>;
+    } <span class="keyword">else</span> {
+	    data.splice(index, <span class="number">1</span>);
+	    <span class="keyword">return</span> <span class="literal">true</span>;
+    }    
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Replaces an object from &#39;data&#39;, an array of objects, with &#39;record&#39; which should contain a property &#39;id&#39; existing
+in the data array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.replace = <span class="keyword">function</span>(record <span class="comment">/* record */</span>, data){
+
+    <span class="keyword">var</span> index = exports.find(record, data);
+
+    <span class="keyword">if</span> (index == -<span class="number">1</span>){
+	    <span class="keyword">return</span> <span class="literal">false</span>;
+    } <span class="keyword">else</span> {
+	    <span class="keyword">var</span> o = data[index];
+	    <span class="keyword">for</span>(<span class="keyword">var</span> e <span class="keyword">in</span> record){
+	        <span class="keyword">if</span> (record.hasOwnProperty(e) &amp;&amp; o.hasOwnProperty(e)){
+		        o[e] = record[e];
+	        }	    
+	    }
+	    <span class="keyword">return</span> record;
+    }    
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Inserts a record into &#39;data&#39; (when new) or replaces an object from &#39;data&#39; (when already existing). </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.merge = <span class="keyword">function</span>(record <span class="comment">/* record */</span>, data){
+
+    <span class="keyword">if</span> (record.id){
+	    <span class="keyword">return</span> exports.replace(record, data);
+    }<span class="keyword">else</span> {
+	    <span class="keyword">return</span> exports.insert(record, data);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Generates data written to file name &#39;file-path-to-write&#39; containing a json array with &#39;n&#39; number of nodes. 
 The function can be called in two forms</p>
+<pre><code>mdata.fillWith(function, number, file-path-to-write)</code></pre>
+<p>where the &#39;function&#39; is called for each node and the function results forms the array-node<br>Alternatively, the function can be called like</p>
+<pre><code>mdata.fillWith(file-path-to-read, number, file-path-to-write)</code></pre>
+<p>Where the data loaded from &#39;file-path-to-read&#39; is used for each node</p>
 
-<pre><code>mdata.fillWith(function, number, file-path-to-write)
-</code></pre>
-
-<p>where the 'function' is called for each node and the function results forms the array-node <br />
-Alternatively, the function can be called like</p>
-
-<pre><code>mdata.fillWith(file-path-to-read, number, file-path-to-write)
-</code></pre>
-
-<p>Where the data loaded from 'file-path-to-read' is used for each node</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">fillWith</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">n</span><span class="p">,</span> <span class="nx">target</span><span class="p">){</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.fillWith = <span class="keyword">function</span>(f, n, target){
     
-    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">f</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">){</span>
-	    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-	        <span class="nx">data</span> <span class="o">=</span> <span class="nx">f</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-	    <span class="p">}</span>
-	    <span class="nx">writeFile</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span><span class="p">{</span> 
-	    <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">filedata</span><span class="p">)</span> <span class="p">{</span>
-	                    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">){</span>
-		                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-		                    <span class="k">return</span><span class="p">;</span>
-	                    <span class="p">}</span>
-	                    <span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">filedata</span><span class="p">);</span>
+    <span class="keyword">var</span> data = [];
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> f === <span class="string">'function'</span>){
+	    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; n; i++){
+	        data = f(data);
+	    }
+	    writeFile(target, data);
+    } <span class="keyword">else</span>{ 
+	    <span class="keyword">var</span> id = <span class="number">0</span>;
+        fs.readFile(f, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(err, filedata)</span> {</span>
+	                    <span class="keyword">if</span> (err){
+		                    console.log(err);
+		                    <span class="keyword">return</span>;
+	                    }
+	                    <span class="keyword">var</span> o = JSON.parse(filedata);
                         
-	                    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-		                    <span class="nx">o</span> <span class="o">=</span>  <span class="nx">shallowCopy</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
-		                    <span class="nx">o</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
-		                    <span class="nx">id</span><span class="o">++</span><span class="p">;</span>
-		                    <span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
-	                    <span class="p">}</span>
-                        <span class="nx">writeFile</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-                    <span class="p">});</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+	                    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; n; i++){
+		                    o =  shallowCopy(o);
+		                    o.id = id;
+		                    id++;
+		                    data.push(o);
+	                    }
+                        writeFile(target, data);
+                    });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
