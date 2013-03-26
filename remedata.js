@@ -1,8 +1,8 @@
 // ### Remedata.js - easy Express middle-ware to provide json web-services with mock data-access
-// ##### v 0.3 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+// ##### v 0.3.1 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 // 
 // > Fair License (Fair)
-// > Copyright (c) 2012 Iwan van der Kleijn
+// > Copyright (c) 2013 Iwan van der Kleijn
 //
 // > Usage of the works is permitted provided that this instrument is retained with the works, so that any entity that uses the works is notified of this instrument.
 //

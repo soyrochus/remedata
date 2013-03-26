@@ -3,7 +3,7 @@ remedata
 
 ## Easy Express (Node.js) middle-ware to provide json web-services with mock data-access
 
-##### v 0.2 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+##### v 0.3.1 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 
 > Fair License (Fair)
 > Copyright (c) 2012 Iwan van der Kleijn
@@ -53,4 +53,4 @@ For POST, PUT and DELETE 'towrite' can be used. On its basic form it writes the 
 
 #### The source
 
-Check out the [Docco generated source file](https://github.com/soyrochus/remedata/blob/master/remedata.js)
+Check out the [Docco generated source file](http://soyrochus.github.com/remedata/)
