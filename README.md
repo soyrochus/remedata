@@ -13,6 +13,19 @@ remedata
 
 > DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+### Development set-up
+
+Use Node Inspector to debug
+
+XX TODO
+
+### Buid
+
+Use Gulp to build
+
+XX TODO
+
+
 #### Introduction
 
 The basic usage of remedata is to create custom Express routing handlers which allow the automatic loading of one 
