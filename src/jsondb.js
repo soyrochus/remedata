@@ -71,11 +71,14 @@ class JsonDb {
       if (err){
         callback(err);
       }else {
+        let l0 = this.data.length;
         this.data = data.filter((e)=> {
           return !(e[this.id] == key)
         });
+        let deleted = (l0 != this.data.length);
         this.saveAll(this.data, (err)=>{
-          callback(err);
+          
+          callback(err, deleted);
         });
       }
     });

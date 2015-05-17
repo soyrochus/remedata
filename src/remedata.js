@@ -13,6 +13,7 @@
 import * as corejs from 'core-js';
 export * from './jsondb';
 
+
 let response = function(err, data, req, res, callback){
   if (callback){
     callback(err, data, req, res);
@@ -38,6 +39,14 @@ let responseNoData = function(err, req, res, callback){
     } else{
         res.status(200).send("OK");
     }
+  }
+};
+
+let responseStatus = function(err, _status, data, req, res, callback){
+  if (callback){
+    callback(err, req, res);
+  } else {
+    res.status(_status).send(data);
   }
 };
 
@@ -82,6 +91,30 @@ export let handlePUT = function(db, callback){
       data[db.Id] =  data[db.Id] || lastPart;
       db.save(data,(err)=>{
         responseNoData(err, req, res, callback);
+      });
+    }
+  };
+};
+
+export let handleDELETE = function(db, callback){
+
+  return function(req, res){
+
+    let isAll = req.url.endsWith('/');
+    let parts = req.url.split('/');
+    let lastPart = parts[parts.length-1];
+    
+    if(isAll) {
+      responseNoData(new Error("Cannot DELETE from an collection without id"), req, res);
+    } else {
+      
+      db.deleteBy(lastPart,(err, deleted)=>{
+        console.log(err, deleted);
+        if (deleted){
+          responseNoData(err, req, res, callback);
+        } else {
+          responseStatus(err, "404", "Not found", req, res, callback);
+        }
       });
     }
   };

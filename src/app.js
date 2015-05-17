@@ -31,6 +31,12 @@ app.post('/men/*', remedata.handlePOST(db,function(err, req, res){
 }));
 
 
+app.delete('/mannen/*', remedata.handleDELETE(db));
+
+app.delete('/men/*', remedata.handleDELETE(db,function(err, req, res){
+  res.json(err);
+}));
+
 // respond with data stored or Resource not Found
 /*app.get('/*', function(req, res) {
   debugger;
