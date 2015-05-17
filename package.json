@@ -1,40 +1,42 @@
 {
-    "name": "remedata",
-    "version": "1.0.0",
-    "description": "Express middle-ware to create a \"instant on\" Mock web services layer (ReST/Json)",
-    "main": "remedata.js",
-    "directories": {
-        "doc": "docs"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/soyrochus/remedata.git"
-    },
-    "keywords": [
-        "express",
-        "mock",
-        "web-service",
-        "rest",
-        "json"
-    ],
-    "author": "Iwan van der Kleijn <iwanvanderkleijn@gmail.com>",
-    "license": "Fair License",
-    "bugs": {
-        "url": "https://github.com/soyrochus/remedata/issues"
-    },
-    "homepage": "https://github.com/soyrochus/remedata",
-    "dependencies": {
-        "async": "^0.9.0",
-        "express": "^4.12.3",
-        "body-parser": "^1.12.3"
-    },
-    "devDependencies": {
-        "gulp": "^3.8.11",
-        "gulp-babel": "^5.1.0",
-        "gulp-concat": "^2.5.2",
-        "gulp-sourcemaps": "^1.5.2"
-    }
+  "name": "remedata",
+  "version": "1.0.0",
+  "description": "Express middle-ware to create a \"instant on\" Mock web services layer (ReST/Json)",
+  "main": "remedata.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soyrochus/remedata.git"
+  },
+  "keywords": [
+    "express",
+    "mock",
+    "web-service",
+    "rest",
+    "json"
+  ],
+  "author": "Iwan van der Kleijn <iwanvanderkleijn@gmail.com>",
+  "license": "Fair License",
+  "bugs": {
+    "url": "https://github.com/soyrochus/remedata/issues"
+  },
+  "homepage": "https://github.com/soyrochus/remedata",
+  "dependencies": {
+    "async": "^0.9.0",
+    "express": "^4.12.3",
+    "body-parser": "^1.12.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-ignore": "^1.2.1",
+    "gulp-plumber": "^1.0.0",
+    "gulp-sourcemaps": "^1.5.2"
+  }
 }
