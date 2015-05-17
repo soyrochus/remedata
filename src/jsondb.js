@@ -14,7 +14,11 @@ class JsonDb {
       this.id = id;
       this.data = null;
     }
-    
+
+    get Id() {
+      return this.id;
+    }
+
     getAll(callback){
         
         if (!(isNone(this.data))){

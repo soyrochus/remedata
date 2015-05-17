@@ -18,6 +18,19 @@ app.get('/men/*', remedata.handleGET(db,function(err, data, req, res){
   res.json(data);
 }));
 
+app.put('/mannen/*', remedata.handlePUT(db));
+
+app.put('/men/*', remedata.handlePUT(db,function(err, req, res){
+  res.json(err);
+}));
+
+app.post('/mannen/*', remedata.handlePOST(db));
+
+app.post('/men/*', remedata.handlePOST(db,function(err, req, res){
+  res.json(err);
+}));
+
+
 // respond with data stored or Resource not Found
 /*app.get('/*', function(req, res) {
   debugger;

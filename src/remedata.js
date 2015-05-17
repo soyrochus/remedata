@@ -29,6 +29,18 @@ let response = function(err, data, req, res, callback){
   }
 };
 
+let responseNoData = function(err, req, res, callback){
+  if (callback){
+    callback(err, req, res);
+  } else {
+    if(err){
+      res.status(500).send(err.message);
+    } else{
+        res.status(200).send("OK");
+    }
+  }
+};
+
 export let handleGET = function(db, callback){
 
   return function(req, res){
@@ -49,3 +61,56 @@ export let handleGET = function(db, callback){
   };
 };
 
+export let handlePUT = function(db, callback){
+
+  return function(req, res){
+
+    let isAll = req.url.endsWith('/');
+    let parts = req.url.split('/');
+    let lastPart = parts[parts.length-1];
+    
+    if(isAll) {
+      responseNoData(new Error("Cannot PUT to collection without id"), req, res);
+    } else {
+      
+      var data = req.body;
+      if (data instanceof Array){
+        responseNoData(new Error("Cannot PUT an array to collection"), req, res);
+        return;
+      }
+
+      data[db.Id] =  data[db.Id] || lastPart;
+      db.save(data,(err)=>{
+        responseNoData(err, req, res, callback);
+      });
+    }
+  };
+};
+
+export let handlePOST = function(db, callback){
+
+  return function(req, res){
+
+    let isAll = req.url.endsWith('/');
+    let parts = req.url.split('/');
+    let lastPart = parts[parts.length-1];
+    var data = req.body;
+    if(isAll) {
+      if (data instanceof Array){
+        db.saveAll(data, (err)=> {
+          responseNoData(err, req, res, callback);
+        });
+      } else {
+        if (!(data[db.Id])){
+          responseNoData(new Error(`No key '${db.Id}' set on data-item`), req, res);
+        } else {
+          db.save(data, (err)=> {
+            responseNoData(err, req, res, callback);
+          });
+        }
+      }
+    } else {
+      responseNoData(new Error("Cannot POST to single item"), req, res);
+    }
+  };
+};
