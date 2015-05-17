@@ -1,23 +1,25 @@
+
+import * as corejs from 'core-js';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import * as fs from 'fs';
-//import * as remedata from './remedata';
+import * as remedata from './remedata';
 
-debugger;
+console.log("REMEDATA", remedata);
 
 const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 //app.use(cors());
 
-const _DATA_ = "./data/";
+let db = remedata.jsondb("data/_data.json", {key: "id"});
 
-let fname = function(req){
-  return _DATA_ + req.url.replace(/\//gi,'_') + ".json"; 
-};
+app.get('/mannen/*', remedata.handleGET(db));
 
+app.get('/men/*', remedata.handleGET(db,function(err, data, req, res){
+  res.json(data);
+}));
 
 // respond with data stored or Resource not Found
-app.get('/*', function(req, res) {
+/*app.get('/*', function(req, res) {
   debugger;
   console.log(req.route);
   fs.readFile(fname(req), {encoding: 'utf-8'} ,function(err, data){
@@ -28,7 +30,7 @@ app.get('/*', function(req, res) {
     }
   });
 });
-
+*/
 let server = app.listen(3000, function () {
 
   let host = server.address().address;

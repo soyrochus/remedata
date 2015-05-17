@@ -16,8 +16,9 @@ class JsonDb {
     }
     
     getAll(callback){
+        
         if (!(isNone(this.data))){
-          callback(null, data);
+          callback(null, this.data);
         } else {
           fs.readFile(this.path, {encoding: 'utf8'},(err, data) =>
                       {
@@ -41,8 +42,7 @@ class JsonDb {
   _getByKey(key){
 
     return this.data.find((e)=>{
-
-      return (e[this.id] === key);
+      return (e[this.id] == key);
     });
   }
 
@@ -68,7 +68,7 @@ class JsonDb {
         callback(err);
       }else {
         this.data = data.filter((e)=> {
-          return !(e[this.id] === key)
+          return !(e[this.id] == key)
         });
         this.saveAll(this.data, (err)=>{
           callback(err);
@@ -83,7 +83,6 @@ class JsonDb {
       if (err){
         callback(err);
       }else {
-        
         let res = this._getByKey(key);
         callback(null, res);
       }
@@ -98,7 +97,7 @@ class JsonDb {
 
         let succes = false;
         this.data = data.map((e)=>{
-          if(e[this.id] === item[this.id]){
+          if(e[this.id] == item[this.id]){
             succes = true;
             return item;
           } else{
@@ -134,10 +133,10 @@ export let jsondb = function(path, options){
   return new JsonDb(path, id);
 };
 
+/*
 let path = "data/_data.json";
 let db = jsondb(path, {key: "id"});
 
-/*
 db.getAll(function(err, data){
   console.log('in getAll', err, data, this);
  });
@@ -166,7 +165,6 @@ db.getAll(function(err, data){
     });
   });
 });
-*/
 
 db.getBy(4, (err, item)=>{
   if(err) {
@@ -188,3 +186,4 @@ db.deleteBy(1, (err)=> {
     return;
   }
 });
+*/
