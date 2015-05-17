@@ -1,4 +1,5 @@
 
+import * as corejs from 'core-js';
 import * as fs from 'fs';
 
 let isNone = function(data){
@@ -7,16 +8,15 @@ let isNone = function(data){
 
 class JsonDb {
     
-    constructor(path, id, unique){
+    constructor(path, id){
       
       this.path = path;
       this.id = id;
-      this.unique = unique;
       this.data = null;
     }
     
     getAll(callback){
-        if (this.data !== null){
+        if (!(isNone(this.data))){
           callback(null, data);
         } else {
           fs.readFile(this.path, {encoding: 'utf8'},(err, data) =>
@@ -25,9 +25,9 @@ class JsonDb {
                           this.data = null;
                           callback(err);
                         } else{
-                          try {                            
-
-                            callback(null,JSON.parse(data));
+                          try {
+                            this.data = JSON.parse(data);
+                            callback(null, this.data);
 
                           } catch(error){
                             this.data = null;
@@ -38,27 +38,115 @@ class JsonDb {
         }
     }
 
-  saveAll(data, callback){
-    console.log(' this is saveAll', data);
-    if (isNone(data)){
-      callback(new Error('Invalid LALA parameters'));
-    }
-    fs.writeFile(this.path, JSON.stringify(data), {encoding: 'utf8'}, (err) => {
-      this.data = null;
-      callback(err);
+  _getByKey(key){
+
+    return this.data.find((e)=>{
+
+      return (e[this.id] === key);
     });
   }
+
+  _guaranteeData(callback){
+    
+    if (isNone(this.data)){
+     
+      this.getAll((err, data)=>{
+        if (err){
+          callback(err);
+        }else {
+          callback(null, data);
+        }
+      });
+    } else {
+      callback(null, this.data);
+    }
+  }
+
+  deleteBy(key, callback){
+    this._guaranteeData((err, data)=>{
+      if (err){
+        callback(err);
+      }else {
+        this.data = data.filter((e)=> {
+          return !(e[this.id] === key)
+        });
+        this.saveAll(this.data, (err)=>{
+          callback(err);
+        });
+      }
+    });
+  }
+
+  getBy(key, callback){
+
+    this._guaranteeData((err, data)=>{
+      if (err){
+        callback(err);
+      }else {
+        
+        let res = this._getByKey(key);
+        callback(null, res);
+      }
+    });
+  }
+
+  save(item, callback){
+    this._guaranteeData((err, data)=>{
+      if (err){
+        callback(err);
+      }else {
+
+        let succes = false;
+        this.data = data.map((e)=>{
+          if(e[this.id] === item[this.id]){
+            succes = true;
+            return item;
+          } else{
+            return e;
+          }
+        });
+        if (!succes){
+          this.data.push(item);
+        }
+        this.saveAll(this.data, (err)=>{
+          callback(err, item);
+        });
+      }
+    });
+  }
+
+  saveAll(data, callback){
+
+    if (isNone(data)){
+      callback(new Error('Invalid parameters'));
+    }
+    this.data = data;
+    fs.writeFile(this.path, JSON.stringify(data), {encoding: 'utf8'}, (err) => {
+
+      callback(err, data);
+    });
+  }  
 }
 
 export let jsondb = function(path, options){
   let config = options || {};
   let id = config.id || 'id';
-  let unique = isNone(config.unique) ? true: config.unique;
-  return new JsonDb(path, id, unique);
+  return new JsonDb(path, id);
 };
 
 let path = "data/_data.json";
-let db = jsondb(path, {key: "id", unique:true});
+let db = jsondb(path, {key: "id"});
+
+/*
+db.getAll(function(err, data){
+  console.log('in getAll', err, data, this);
+ });
+
+db.getBy(1, function(err, data){
+  console.log("Get by: ", err, data);
+});
+
+
 db.getAll(function(err, data){
   console.log('in getAll', err, data);
   if (err) return;
@@ -69,8 +157,6 @@ db.getAll(function(err, data){
     surname: "Goris",
     age: 26
   });
-  console.log("mutated data", d);
-  debugger;
   db.saveAll(d, function(err){
     console.log(err);
     if(err) return;
@@ -80,12 +166,25 @@ db.getAll(function(err, data){
     });
   });
 });
-
-
-
-/*db.writeAll();
-db.insert(data);
-db.delete("id");
-db.get("id");
-db.getOrd(5);
 */
+
+db.getBy(4, (err, item)=>{
+  if(err) {
+    console.log("error: ", err);
+    return;
+  }
+  item.name = "BasjeMAN";
+  db.save(item, (err)=>{
+    if(err) {
+    console.log("error: ", err);
+      return;
+    } 
+  });
+});
+
+db.deleteBy(1, (err)=> {
+  if(err) {
+    console.log("error: ", err);
+    return;
+  }
+});
