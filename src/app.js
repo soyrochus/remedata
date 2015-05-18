@@ -15,27 +15,45 @@ let db = remedata.jsondb("data/_data.json", {key: "id"});
 app.get('/mannen/*', remedata.handleGET(db));
 
 app.get('/men/*', remedata.handleGET(db,function(err, data, req, res){
+
+   res.json(data || "booh");
+}));
+
+app.get('/hombres/*', remedata.handleGET(db, true, function(data, req, res){
   res.json(data);
 }));
 
 app.put('/mannen/*', remedata.handlePUT(db));
 
-app.put('/men/*', remedata.handlePUT(db,function(err, req, res){
-  res.json(err);
+app.put('/men/*', remedata.handlePUT(db,function(err, item, req, res){
+  res.json(err, item);
 }));
+
+app.put('/hombres/*', remedata.handlePUT(db, true, function(data, req, res){
+  res.json(data);
+}));
+
 
 app.post('/mannen/*', remedata.handlePOST(db));
 
-app.post('/men/*', remedata.handlePOST(db,function(err, req, res){
-  res.json(err);
+app.post('/men/*', remedata.handlePOST(db,function(err, data, req, res){
+  res.json(err, data);
 }));
 
+app.post('/hombres/*', remedata.handlePOST(db, true, function(data, req, res){
+  res.json(data);
+}));
 
 app.delete('/mannen/*', remedata.handleDELETE(db));
 
-app.delete('/men/*', remedata.handleDELETE(db,function(err, req, res){
-  res.json(err);
+app.delete('/men/*', remedata.handleDELETE(db,function(err, id, req, res){
+  res.json(err, id);
 }));
+
+app.delete('/hombres/*', remedata.handleDELETE(db, true, function(data, req, res){
+  res.json(data);
+}));
+
 
 // respond with data stored or Resource not Found
 /*app.get('/*', function(req, res) {

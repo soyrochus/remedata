@@ -13,137 +13,204 @@
 import * as corejs from 'core-js';
 export * from './jsondb';
 
+export class Status {
+
+  constructor(code, message, data){
+    this.code = code;
+    this.message = message;
+    this.data = data || null;
+  }
+  
+  get Code (){
+    return this.code;
+  }
+  
+  get Message() {
+    return this.message;
+  }
+
+  get Data() {
+    return this.data;
+  }
+}
+
+Status.OK = function(data) {
+  return new Status(200, "OK", data);
+};
+
+Status.ERROR = function(message, data){
+  return new Status(500, messsage, data);
+};
+
+Status.NOTFOUND = function(data){
+  return new Status(404, "Not found", data);
+}
 
 let response = function(err, data, req, res, callback){
+  
   if (callback){
     callback(err, data, req, res);
   } else {
     if(err){
       res.status(500).send(err.message);
     } else{
-      if(data){
-        res.json(data);
+      if(data instanceof Status){
+        //res.status(404).send("Not found");
+        console.log("RESPONSE:", err, data);
+        res.status(data.Code).send(data.Message);
       } else {
-        res.status(404).send("Not found");
+        res.json(data);
       }
     }
   }
 };
 
-let responseNoData = function(err, req, res, callback){
-  if (callback){
-    callback(err, req, res);
-  } else {
-    if(err){
-      res.status(500).send(err.message);
-    } else{
-        res.status(200).send("OK");
-    }
-  }
-};
+export let handleGET = function(db, preprocess, callback){
 
-let responseStatus = function(err, _status, data, req, res, callback){
-  if (callback){
-    callback(err, req, res);
-  } else {
-    res.status(_status).send(data);
+  //Variable arguments: db, [processs = true|false], [callback = Function|null]
+  if (arguments.length < 3){
+    callback = preprocess;
+    preprocess = null;
   }
-};
-
-export let handleGET = function(db, callback){
 
   return function(req, res){
 
     let isAll = req.url.endsWith('/');
     let parts = req.url.split('/');
-    let lastPart = parts[parts.length-1];
-    
+    let id = parts[parts.length-1];
+
+    if (preprocess && callback) {
+      callback({id, url: req.url, isCollection: isAll}, req, res);
+      return;
+    }
+
     if(isAll) {
       db.getAll((err, data)=>{
+        console.log("GETALL", err, data, id, parts);
         response(err, data, req, res, callback);
       });
     } else {
-      db.getBy(lastPart,(err, data)=>{
-        response(err, data, req, res, callback);
-      });
-    }
-  };
-};
-
-export let handlePUT = function(db, callback){
-
-  return function(req, res){
-
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let lastPart = parts[parts.length-1];
-    
-    if(isAll) {
-      responseNoData(new Error("Cannot PUT to collection without id"), req, res);
-    } else {
-      
-      var data = req.body;
-      if (data instanceof Array){
-        responseNoData(new Error("Cannot PUT an array to collection"), req, res);
-        return;
-      }
-
-      data[db.Id] =  data[db.Id] || lastPart;
-      db.save(data,(err)=>{
-        responseNoData(err, req, res, callback);
-      });
-    }
-  };
-};
-
-export let handleDELETE = function(db, callback){
-
-  return function(req, res){
-
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let lastPart = parts[parts.length-1];
-    
-    if(isAll) {
-      responseNoData(new Error("Cannot DELETE from an collection without id"), req, res);
-    } else {
-      
-      db.deleteBy(lastPart,(err, deleted)=>{
-        console.log(err, deleted);
-        if (deleted){
-          responseNoData(err, req, res, callback);
-        } else {
-          responseStatus(err, "404", "Not found", req, res, callback);
+      db.getBy(id,(err, data)=>{
+        if(!data){
+          console.log("GET NOT FOUND", data, id);
+          response(err, Status.NOTFOUND(id), req, res, callback);
+        }else{
+          console.log("ITEM", err, data, id, parts);
+          response(err, data, req, res, callback);
         }
       });
     }
   };
 };
 
-export let handlePOST = function(db, callback){
+export let handlePUT = function(db, preprocess, callback){
+
+  //Variable arguments: db, [processs = true|false], [callback = Function|null]
+  if (arguments.length < 3){
+    callback = preprocess;
+    preprocess = null;
+  }
 
   return function(req, res){
 
     let isAll = req.url.endsWith('/');
     let parts = req.url.split('/');
-    let lastPart = parts[parts.length-1];
+    let id = parts[parts.length-1];
     var data = req.body;
+    
+    if (preprocess && callback) {
+      callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      return;
+    }
+
+    if(isAll) {
+      response(new Error("Cannot PUT to collection without id"), null, req, res, callback);
+    } else {
+      
+      if (data instanceof Array){
+        response(new Error("Cannot PUT an array to collection"), null, req, res, callback);
+        return;
+      }
+
+      data[db.Id] = id;
+      db.save(data,(err)=>{
+        response(err, Status.OK(data), req, res, callback);
+      });
+    }
+  };
+};
+
+export let handleDELETE = function(db, preprocess, callback){
+
+  //Variable arguments: db, [processs = true|false], [callback = Function|null]
+  if (arguments.length < 3){
+    callback = preprocess;
+    preprocess = null;
+  }
+
+  return function(req, res){
+
+    let isAll = req.url.endsWith('/');
+    let parts = req.url.split('/');
+    let id = parts[parts.length-1];
+
+    if (preprocess && callback) {
+      callback({id, url: req.url, isCollection: isAll}, req, res);
+      return;
+    }
+
+    if(isAll) {
+      response(new Error("Cannot DELETE from an collection without id"), null, req, res, callback);
+    } else {
+      
+      db.deleteBy(id,(err, deleted)=>{
+
+        if (deleted){
+          response(err, Status.OK(id), req, res, callback);
+        } else {
+          response(err, Status.NOTFOUND(id), req, res, callback);
+        }
+      });
+    }
+  };
+};
+
+export let handlePOST = function(db, preprocess, callback){
+
+  //Variable arguments: db, [processs = true|false], [callback = Function|null]
+  if (arguments.length < 3){
+    callback = preprocess;
+    preprocess = null;
+  }
+
+  return function(req, res){
+
+    let isAll = req.url.endsWith('/');
+    let parts = req.url.split('/');
+    let id = parts[parts.length-1];
+    var data = req.body;
+
+    if (preprocess && callback) {
+      callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      return;
+    }
+
     if(isAll) {
       if (data instanceof Array){
         db.saveAll(data, (err)=> {
-          responseNoData(err, req, res, callback);
+          response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
         });
       } else {
         if (!(data[db.Id])){
-          responseNoData(new Error(`No key '${db.Id}' set on data-item`), req, res);
+          response(new Error(`No key '${db.Id}' set on data-item`), null, req, res, callback);
         } else {
           db.save(data, (err)=> {
-            responseNoData(err, req, res, callback);
+            response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
           });
         }
       }
     } else {
-      responseNoData(new Error("Cannot POST to single item"), req, res);
+      response(new Error("Cannot POST to single item"), null, req, res, callback);
     }
   };
 };
