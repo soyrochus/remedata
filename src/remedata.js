@@ -65,37 +65,31 @@ let response = function(err, data, req, res, callback){
   }
 };
 
-export let handleGET = function(db, preprocess, callback){
+let urlInfo = function(req){
+  let isAll = req.url.endsWith('/');
+  let parts = req.url.split('/');
+  let id = parts[parts.length-1];
+  return {isAll, parts, id};
+};
 
-  //Variable arguments: db, [processs = true|false], [callback = Function|null]
-  if (arguments.length < 3){
-    callback = preprocess;
-    preprocess = null;
-  }
+export let handleGET = function(db, callback){
 
   return function(req, res){
-
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let id = parts[parts.length-1];
-
-    if (preprocess && callback) {
-      callback({id, url: req.url, isCollection: isAll}, req, res);
-      return;
-    }
-
+ 
+    let {isAll, parts, id} = urlInfo(req);
+   
     if(isAll) {
       db.getAll((err, data)=>{
-        console.log("GETALL", err, data, id, parts);
+
         response(err, data, req, res, callback);
       });
     } else {
       db.getBy(id,(err, data)=>{
         if(!data){
-          console.log("GET NOT FOUND", data, id);
+
           response(err, Status.NOTFOUND(id), req, res, callback);
         }else{
-          console.log("ITEM", err, data, id, parts);
+
           response(err, data, req, res, callback);
         }
       });
@@ -103,24 +97,18 @@ export let handleGET = function(db, preprocess, callback){
   };
 };
 
-export let handlePUT = function(db, preprocess, callback){
-
-  //Variable arguments: db, [processs = true|false], [callback = Function|null]
-  if (arguments.length < 3){
-    callback = preprocess;
-    preprocess = null;
-  }
+export let handlePUT = function(db, callback){
 
   return function(req, res){
 
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let id = parts[parts.length-1];
+    let {isAll, parts, id} = urlInfo(req);
     var data = req.body;
     
-    if (preprocess && callback) {
-      callback({id, data, url: req.url, isCollection: isAll}, req, res);
-      return;
+    if (callback) {
+      let finished = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      if (finished){
+        return;
+      }
     }
 
     if(isAll) {
@@ -142,21 +130,16 @@ export let handlePUT = function(db, preprocess, callback){
 
 export let handleDELETE = function(db, preprocess, callback){
 
-  //Variable arguments: db, [processs = true|false], [callback = Function|null]
-  if (arguments.length < 3){
-    callback = preprocess;
-    preprocess = null;
-  }
 
   return function(req, res){
 
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let id = parts[parts.length-1];
+    let {isAll, parts, id} = urlInfo(req);
 
-    if (preprocess && callback) {
-      callback({id, url: req.url, isCollection: isAll}, req, res);
-      return;
+    if (callback) {
+      let finished = callback({id, url: req.url, isCollection: isAll}, req, res);
+      if (finished){
+        return;
+      }
     }
 
     if(isAll) {
@@ -177,22 +160,16 @@ export let handleDELETE = function(db, preprocess, callback){
 
 export let handlePOST = function(db, preprocess, callback){
 
-  //Variable arguments: db, [processs = true|false], [callback = Function|null]
-  if (arguments.length < 3){
-    callback = preprocess;
-    preprocess = null;
-  }
-
   return function(req, res){
 
-    let isAll = req.url.endsWith('/');
-    let parts = req.url.split('/');
-    let id = parts[parts.length-1];
+    let {isAll, parts, id} = urlInfo(req);
     var data = req.body;
 
-    if (preprocess && callback) {
-      callback({id, data, url: req.url, isCollection: isAll}, req, res);
-      return;
+    if (callback) {
+      let finished = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      if (finished){
+        return;
+      }
     }
 
     if(isAll) {
