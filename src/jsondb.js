@@ -1,8 +1,16 @@
+// > Copyright (c) 2012-2015 Iwan van der Kleijn
+// > All rights reserved.
+//
+// > This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree
+// 
+// This file is part of [Remedata](remedata.html)
+
+
 
 import * as corejs from 'core-js';
 import * as fs from 'fs';
 
-let isNone = function(data){
+export let isNone = function(data){
   return ((data === null) || (typeof data == 'undefined'));
 };
 

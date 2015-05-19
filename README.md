@@ -3,38 +3,26 @@ remedata
 
 ## Easy Express (Node.js) middle-ware to provide json web-services with mock data-access
 
-##### v 0.3.2 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+##### v 1.0.0 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 
 > Fair License (Fair)
-> Copyright (c) 2012 Iwan van der Kleijn
+> Copyright (c) 2015 Iwan van der Kleijn
 
 > Usage of the works is permitted provided that this instrument is retained with the works, 
 > so that any entity that uses the works is notified of this instrument.
 
 > DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-### Development set-up
-
-Use Node Inspector to debug
-
-XX TODO
-
-### Buid
-
-Use Gulp to build
-
-XX TODO
-
-
-#### Introduction
+### Introduction
 
 The basic usage of remedata is to create custom Express routing handlers which allow the automatic loading of one 
 or more files, which then can be treated, though CRUD operations, as in-memory tables and consecutively saved back to
-disk. 
-  
-In the following examples we presume 
+disk. So a GET method correspond to a READ, a PUT to a WRITE etc.
+
+Let´s take a look in more detail. In the following examples we presume that we load the library like this:
  
-     var mdata = require('remedata');
+    var mdata = require('remedata'); // or ..
+    import * as mdata from 'remedata'; // ES6
      
 Two basic forms are supported: 
 
@@ -64,6 +52,6 @@ For POST, PUT and DELETE 'towrite' can be used. On its basic form it writes the 
            return record;
      }));
 
-#### The source
+### The source
 
 Check out the [Docco generated source file](http://soyrochus.github.com/remedata/)
