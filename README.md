@@ -13,7 +13,16 @@ remedata
 
 > DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+> Copyright (c) 2012-2015 Iwan van der Kleijn
+> All rights reserved.
+
+>This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree. An additional grant of patent rights can be found in the PATENTS file in the same directory.
+
 ### Introduction
+
+### Implementation note
+
+### Quick start guide
 
 The basic usage of remedata is to create custom Express routing handlers which allow the automatic loading of one 
 or more files, which then can be treated, though CRUD operations, as in-memory tables and consecutively saved back to

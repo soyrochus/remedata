@@ -5,13 +5,11 @@
 // 
 // This file is part of [Remedata](remedata.html)
 
-
+// Import standard ES6 API
 import * as corejs from 'core-js';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import * as remedata from './remedata';
-
-console.log("REMEDATA", remedata);
 
 const app = express();
 // for parsing application/json
@@ -30,11 +28,17 @@ app.get('/men/*', remedata.handleGET(db));
 // In case the callback is given, it is expected that the code returns data to the called
 // The return value of the handler has no effect on the further processing of the request
 app.get('/hombres/*', remedata.handleGET(db,function(err, data, req, res){
-
-   let result = data.map((e)=> {
-     e.beard = true;
-     return e;
-   });
+   let result;
+   if (data instanceof Array){                        
+      result = data.map((e)=> {
+        e.beard = true;
+        return e;
+      });
+   }
+   else {
+     data.beard = true;
+     result = data;
+   }
    res.json(result);
 }));
 
@@ -47,33 +51,41 @@ app.put('/men/*', remedata.handlePUT(db));
 // if not, it would not be usefull to define the handler anyway
 app.put('/hombres/*', remedata.handlePUT(db,function(data, req, res){
 
-   let modified = data.map((e)=> {
-     e.beard = true;
-     return e;
-   });
+   let modified;                        
+   if (data instanceof Array){                        
+      modified = data.map((e)=> {
+        e.beard = true;
+        return e;
+      });
+   }
+   else {
+     data.beard = true;
+     modified = data;
+   }
+
   return modified;
 }));
 
 // Define default POST handler;
 // Data should be passed as json formatted data in the request body with content-type 'application/json' 
 // If the url refers to a plural or collection, i.e. 'path/', the while json file is written to de db (data should be an array)
-// If the url refers to an id, i.e. 'path/id', a single item is written to the db
 app.post('/men/*', remedata.handlePOST(db));
 
-// Define PUT handler with callback which is called *before* db write
-// Rules for return value of the handle are those for like the PUT handler
+// Define PUT handler with callback which is called *before* db write.
+// Rules for return value of the handle are like those for the PUT handler
 app.post('/hombres/*', remedata.handlePOST(db,function(data, req, res){
   data.beard = true;
   return data;
 }));
 
-// Define DELETE handler; deltes data with given id in url, i.e. 'path/id'. 
+// Define DELETE handler; deletes data with given id in url, i.e. 'path/id'. 
 app.delete('/men/*', remedata.handleDELETE(db));
 
 // Define PUT handler with callback which is called *before* db write
-// Return value is the actual id of the item to be deleted 
+// Return value is the actual id of the item to be deleted, but for the remainder 
+// the rules for return value of the handle are like those for the PUT handler
 app.delete('/hombres/*', remedata.handleDELETE(db,function(id, req, res){
-
+   console.log('DELETE:',id);
    return (id + 1);
 }));
 

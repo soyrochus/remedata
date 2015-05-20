@@ -67,11 +67,11 @@
 All rights reserved.</p>
 <p>This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree. An additional grant of patent rights can be found in the PATENTS file in the same directory.</p>
 </blockquote>
-<p>Be aware that Remedata is written in ECMAScript 6 (2015). If executed in an ECMAScript 5 compatible run-time, you´ll need
-<a href="http://babeljs.org">Babel</a> to compile, or transpile, the source files (in src) to their transformed destinations (in dist)
+<p>Be aware that Remedata is written in ECMAScript 6 (2015). If to be executed in an ECMAScript 5 compatible run-time, you´ll need
+<a href="http://babeljs.org">Babel</a> to compile, or transpile, the source files (in src) to their transformed target files (in dist).
 For an excellent overview of ES6 see: <a href="https://babeljs.io/docs/learn-es6/">https://babeljs.io/docs/learn-es6/</a></p>
 <h5 id="other-files-included-in-remedata">Other files included in Remedata</h5>
-<p>Json DB mock <a href="jsondb.html">jsondb.html</a>
+<p>Json DB mock <a href="jsondb.html">jsondb.html</a>. 
 Example: <a href="app.html">app.html</a></p>
 
             </div>
@@ -117,7 +117,8 @@ Example: <a href="app.html">app.html</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> * from <span class="hljs-string">'./jsondb'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {isNone} <span class="hljs-keyword">from</span> <span class="hljs-string">'./jsondb'</span>;
+<span class="hljs-keyword">export</span> * from <span class="hljs-string">'./jsondb'</span>;</pre></div></div>
             
         </li>
         
@@ -382,13 +383,13 @@ jsondb instance [] -&gt; ()</p>
     } <span class="hljs-keyword">else</span> {
       
       <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){
-        response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot PUT an array to collection"</span>), <span class="hljs-literal">null</span>, req, res, callback);
+        response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot PUT an array to collection"</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
       }
 
       data[db.Id] = id;
       db.save(data,(err)=&gt;{
-        response(err, Status.OK(data), req, res, callback);
+        response(err, Status.OK(data), req, res);
       });
     }
   };
@@ -411,11 +412,11 @@ JsonDb [callback] -&gt; void</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> handleDELETE = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(db, callback)</span></span>{
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
-
+    <span class="hljs-keyword">debugger</span>;
     <span class="hljs-keyword">let</span> {isAll, parts, id} = urlInfo(req);
-
+       
     <span class="hljs-keyword">if</span> (callback) {
-      <span class="hljs-keyword">let</span> id = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      <span class="hljs-keyword">let</span> id = callback({id, url: req.url, isCollection: isAll}, req, res);
       <span class="hljs-keyword">if</span> (isNone(id)){
         response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No id returned from Handle'</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
@@ -429,9 +430,9 @@ JsonDb [callback] -&gt; void</p>
       db.deleteBy(id,(err, deleted)=&gt;{
 
         <span class="hljs-keyword">if</span> (deleted){
-          response(err, Status.OK(id), req, res, callback);
+          response(err, Status.OK(id), req, res);
         } <span class="hljs-keyword">else</span> {
-          response(err, Status.NOTFOUND(id), req, res, callback);
+          response(err, Status.NOTFOUND(id), req, res);
         }
       });
     }
@@ -469,19 +470,19 @@ JsonDb [callback] -&gt; void</p>
     <span class="hljs-keyword">if</span>(isAll) {
       <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){
         db.saveAll(data, (err)=&gt; {
-          response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
+          response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
         });
       } <span class="hljs-keyword">else</span> {
         <span class="hljs-keyword">if</span> (!(data[db.Id])){
-          response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`No key '<span class="hljs-subst">${db.Id}</span>' set on data-item`</span>), <span class="hljs-literal">null</span>, req, res, callback);
+          response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`No key '<span class="hljs-subst">${db.Id}</span>' set on data-item`</span>), <span class="hljs-literal">null</span>, req, res);
         } <span class="hljs-keyword">else</span> {
           db.save(data, (err)=&gt; {
-            response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
+            response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
           });
         }
       }
     } <span class="hljs-keyword">else</span> {
-      response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot POST to single item"</span>), <span class="hljs-literal">null</span>, req, res, callback);
+      response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot POST to single item"</span>), <span class="hljs-literal">null</span>, req, res);
     }
   };
 };</pre></div></div>

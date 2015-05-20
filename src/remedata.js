@@ -19,6 +19,7 @@
 // Import standard ES6 API
 import * as corejs from 'core-js';
 // Publish public interface of jsondb as part of remedata
+import {isNone} from './jsondb';
 export * from './jsondb';
 
 // Represents HTTP return codes (i.e. 200 OK, 404 Not Found etc)
@@ -137,13 +138,13 @@ export let handlePUT = function(db, callback){
     } else {
       
       if (data instanceof Array){
-        response(new Error("Cannot PUT an array to collection"), null, req, res, callback);
+        response(new Error("Cannot PUT an array to collection"), null, req, res);
         return;
       }
 
       data[db.Id] = id;
       db.save(data,(err)=>{
-        response(err, Status.OK(data), req, res, callback);
+        response(err, Status.OK(data), req, res);
       });
     }
   };
@@ -154,11 +155,11 @@ export let handlePUT = function(db, callback){
 export let handleDELETE = function(db, callback){
 
   return function(req, res){
-
+    debugger;
     let {isAll, parts, id} = urlInfo(req);
-
+       
     if (callback) {
-      let id = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      let id = callback({id, url: req.url, isCollection: isAll}, req, res);
       if (isNone(id)){
         response(new Error('No id returned from Handle'), null, req, res);
         return;
@@ -172,9 +173,9 @@ export let handleDELETE = function(db, callback){
       db.deleteBy(id,(err, deleted)=>{
 
         if (deleted){
-          response(err, Status.OK(id), req, res, callback);
+          response(err, Status.OK(id), req, res);
         } else {
-          response(err, Status.NOTFOUND(id), req, res, callback);
+          response(err, Status.NOTFOUND(id), req, res);
         }
       });
     }
@@ -201,19 +202,19 @@ export let handlePOST = function(db, preprocess, callback){
     if(isAll) {
       if (data instanceof Array){
         db.saveAll(data, (err)=> {
-          response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
+          response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
         });
       } else {
         if (!(data[db.Id])){
-          response(new Error(`No key '${db.Id}' set on data-item`), null, req, res, callback);
+          response(new Error(`No key '${db.Id}' set on data-item`), null, req, res);
         } else {
           db.save(data, (err)=> {
-            response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res, callback);
+            response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
           });
         }
       }
     } else {
-      response(new Error("Cannot POST to single item"), null, req, res, callback);
+      response(new Error("Cannot POST to single item"), null, req, res);
     }
   };
 };

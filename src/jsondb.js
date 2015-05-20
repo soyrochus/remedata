@@ -5,15 +5,16 @@
 // 
 // This file is part of [Remedata](remedata.html)
 
-
-
+// Import standard ES6 API
 import * as corejs from 'core-js';
 import * as fs from 'fs';
 
+// Do not test for falsity, 0 and [] are perfectly valid values, but do test if variable is null or undefined 
 export let isNone = function(data){
   return ((data === null) || (typeof data == 'undefined'));
 };
 
+// Represents JSON file, as an in-memory database table. Mutations are written to disk.
 class JsonDb {
     
     constructor(path, id){
@@ -27,11 +28,13 @@ class JsonDb {
       return this.id;
     }
 
+    // Retrieve array with elements 
     getAll(callback){
-        
+        // Directly return data if already loaded in-memory
         if (!(isNone(this.data))){
           callback(null, this.data);
-        } else {
+        } else { 
+          // If table not initialized, load from disk         
           fs.readFile(this.path, {encoding: 'utf8'},(err, data) =>
                       {
                         if (err){
@@ -39,6 +42,7 @@ class JsonDb {
                           callback(err);
                         } else{
                           try {
+                            
                             this.data = JSON.parse(data);
                             callback(null, this.data);
 
@@ -51,6 +55,7 @@ class JsonDb {
         }
     }
 
+  // private method; get element by value of the default key
   _getByKey(key){
 
     return this.data.find((e)=>{
@@ -58,6 +63,7 @@ class JsonDb {
     });
   }
 
+  // Load data from disk if not present in memory
   _guaranteeData(callback){
     
     if (isNone(this.data)){
@@ -74,16 +80,21 @@ class JsonDb {
     }
   }
 
+  // remove item from table
   deleteBy(key, callback){
     this._guaranteeData((err, data)=>{
       if (err){
         callback(err);
       }else {
         let l0 = this.data.length;
+        // Remove the item from the in-memory collection
         this.data = data.filter((e)=> {
           return !(e[this.id] == key)
         });
+        // Determine if the element was removed or not
         let deleted = (l0 != this.data.length);
+
+        // flush changes to disk
         this.saveAll(this.data, (err)=>{
           
           callback(err, deleted);
@@ -92,6 +103,7 @@ class JsonDb {
     });
   }
 
+  // Get one item from Table
   getBy(key, callback){
 
     this._guaranteeData((err, data)=>{
@@ -104,6 +116,7 @@ class JsonDb {
     });
   }
 
+  // Save item to collection, overwriting if existing and otherwise inserting. Changes are flushed to disk.
   save(item, callback){
     this._guaranteeData((err, data)=>{
       if (err){
@@ -142,6 +155,8 @@ class JsonDb {
   }  
 }
 
+
+// Public interface: factory function. 
 export let jsondb = function(path, options){
   let config = options || {};
   let id = config.id || 'id';
@@ -149,6 +164,9 @@ export let jsondb = function(path, options){
 };
 
 /*
+
+Some examples.....
+
 let path = "data/_data.json";
 let db = jsondb(path, {key: "id"});
 
