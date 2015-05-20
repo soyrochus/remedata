@@ -4,6 +4,9 @@
 // > This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree
 // 
 // This file is part of [Remedata](remedata.html)
+// It is a demo of how Remedata can be used. 
+// The application consists of a standard Express 4.* application. Instead of defining function callbacks directly on the 
+// Express app routing methods (get, post etc.), a handl 
 
 // Import standard ES6 API
 import * as corejs from 'core-js';

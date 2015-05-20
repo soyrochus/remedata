@@ -16,9 +16,9 @@ export let isNone = function(data){
 
 // Represents JSON file, as an in-memory database table. Mutations are written to disk.
 class JsonDb {
-    
+
+    // constructor (path to JSON file: string), (property-name used to store key: any): void
     constructor(path, id){
-      
       this.path = path;
       this.id = id;
       this.data = null;
@@ -28,7 +28,7 @@ class JsonDb {
       return this.id;
     }
 
-    // Retrieve array with elements 
+    // Retrieve array with all elements / items ('records') 
     getAll(callback){
         // Directly return data if already loaded in-memory
         if (!(isNone(this.data))){
@@ -42,11 +42,12 @@ class JsonDb {
                           callback(err);
                         } else{
                           try {
-                            
+                            // convert JSON string to JavaScript object. 
                             this.data = JSON.parse(data);
                             callback(null, this.data);
 
                           } catch(error){
+                            // Catch error in case of conversion errors.
                             this.data = null;
                             callback(error);
                           }
@@ -82,6 +83,7 @@ class JsonDb {
 
   // remove item from table
   deleteBy(key, callback){
+    // load data from file if not loaded in memory
     this._guaranteeData((err, data)=>{
       if (err){
         callback(err);
@@ -116,7 +118,7 @@ class JsonDb {
     });
   }
 
-  // Save item to collection, overwriting if existing and otherwise inserting. Changes are flushed to disk.
+  // Save item to collection, overwriting an existing item and otherwise inserting it. Changes are flushed to disk.
   save(item, callback){
     this._guaranteeData((err, data)=>{
       if (err){
@@ -124,6 +126,7 @@ class JsonDb {
       }else {
 
         let succes = false;
+        // map over collection, replacing an existing item with the new ('changed') one
         this.data = data.map((e)=>{
           if(e[this.id] == item[this.id]){
             succes = true;
@@ -132,20 +135,27 @@ class JsonDb {
             return e;
           }
         });
+        // If not existing item was found, the new item is considered to be truly new and 
+        // appended to the table
         if (!succes){
           this.data.push(item);
         }
+        // Data flushed to disk
         this.saveAll(this.data, (err)=>{
           callback(err, item);
         });
       }
     });
   }
-
+  // Save an Array to table, overwriting existing content 
   saveAll(data, callback){
 
+    // Arguments validations. 'Data' MUST be an array.
     if (isNone(data)){
       callback(new Error('Invalid parameters'));
+    }
+    if ((data instanceof Array)){
+      callback(new Error('Data needs to be an Array'));
     }
     this.data = data;
     fs.writeFile(this.path, JSON.stringify(data), {encoding: 'utf8'}, (err) => {
@@ -163,10 +173,9 @@ export let jsondb = function(path, options){
   return new JsonDb(path, id);
 };
 
+
+// Some examples.....
 /*
-
-Some examples.....
-
 let path = "data/_data.json";
 let db = jsondb(path, {key: "id"});
 

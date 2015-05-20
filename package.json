@@ -21,7 +21,7 @@
     "json"
   ],
   "author": "Iwan van der Kleijn <iwanvanderkleijn@gmail.com>",
-  "license": "Fair License",
+  "license": "BSD License",
   "bugs": {
     "url": "https://github.com/soyrochus/remedata/issues"
   },

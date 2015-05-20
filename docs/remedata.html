@@ -34,11 +34,6 @@
                   remedata.js
                 </a>
               
-                
-                <a class="source" href="wsapp.html">
-                  wsapp.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -65,7 +60,7 @@
 <blockquote>
 <p>Copyright (c) 2012-2015 Iwan van der Kleijn
 All rights reserved.</p>
-<p>This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree. An additional grant of patent rights can be found in the PATENTS file in the same directory.</p>
+<p>This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree.</p>
 </blockquote>
 <p>Be aware that Remedata is written in ECMAScript 6 (2015). If to be executed in an ECMAScript 5 compatible run-time, you´ll need
 <a href="http://babeljs.org">Babel</a> to compile, or transpile, the source files (in src) to their transformed target files (in dist).
@@ -144,7 +139,7 @@ Example: <a href="app.html">app.html</a></p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>ES6 class constructor</p>
+              <p>constructor (Error code: number), (error message: string), (auxiliary data: any): void</p>
 
             </div>
             
@@ -202,7 +197,7 @@ Example: <a href="app.html">app.html</a></p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Known HTTP Status codes</p>
+              <p>Known HTTP Status codes. OK</p>
 
             </div>
             
@@ -223,7 +218,7 @@ Status.NOTFOUND = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Generic HTTP error code</p>
+              <p>Generic HTTP error code (the infamous ‘500’)</p>
 
             </div>
             
@@ -241,19 +236,12 @@ Status.NOTFOUND = <span class="hljs-function"><span class="hljs-keyword">functio
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Utility function to encapsulate server response or, if given a handler,
-delegate the response to the handler function</p>
+delegate the response to the handler function.
+response (Exception: Error), (data: mixed [Status | Object]), (request: express.req), (response: express.res), (callback: function): void</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> response = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data, req, res, callback)</span></span>{
-  
-  <span class="hljs-keyword">if</span> (callback){
-    callback(err, data, req, res);
-  } <span class="hljs-keyword">else</span> {
-    <span class="hljs-keyword">if</span>(err){
-      res.status(<span class="hljs-number">500</span>).send(err.message);
-    } <span class="hljs-keyword">else</span>{
-      <span class="hljs-keyword">if</span>(data <span class="hljs-keyword">instanceof</span> Status){</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> response = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data, req, res, callback)</span></span>{</pre></div></div>
             
         </li>
         
@@ -263,6 +251,55 @@ delegate the response to the handler function</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Short-circuit execution if a callback handler is provided: delegate to this function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (callback){
+    callback(err, data, req, res);
+  } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Respond with HTTP 500 and custom error message in case of an error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(err){
+      res.status(<span class="hljs-number">500</span>).send(err.message);
+    } <span class="hljs-keyword">else</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If ‘data’ contains a Status object, this will be send to the client, otherwise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(data <span class="hljs-keyword">instanceof</span> Status){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Send an HTTP statuscode  </p>
 
@@ -274,13 +311,13 @@ delegate the response to the handler function</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>or the data as JSON payload</p>
+              <p>the data is send as a JSON payload</p>
 
             </div>
             
@@ -293,14 +330,13 @@ delegate the response to the handler function</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>get Url metadata; 
-{request object} -&gt; {url meta-data } </p>
+              <p>get Url metadata; urlInfo (express.req): object</p>
 
             </div>
             
@@ -314,35 +350,103 @@ delegate the response to the handler function</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Returns Express handler for GET requests
-jsondb instance [] -&gt; ()</p>
+handleGET (table instance: jsondb.JsonDb), (callback handler: function) : void</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> handleGET = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(db, callback)</span></span>{
 
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
- 
-    <span class="hljs-keyword">let</span> {isAll, parts, id} = urlInfo(req);
-   
-    <span class="hljs-keyword">if</span>(isAll) {
-      db.getAll((err, data)=&gt;{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Get url data, obtain variables through ‘destructuring’ of the returned object
+See: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring assignment</a></p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> {isAll, parts, id} = urlInfo(req);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>If url denotes a collection (i.e.: ‘path/‘) treat it like such        </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(isAll) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Retrieve all items from the table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      db.getAll((err, data)=&gt;{
+        
         response(err, data, req, res, callback);
       });
-    } <span class="hljs-keyword">else</span> {
-      db.getBy(id,(err, data)=&gt;{
-        <span class="hljs-keyword">if</span>(!data){
+    } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>In case of a path with an id, denoting a singular item, i.e. ‘path/id’, retreive the item by said id</p>
 
-          response(err, Status.NOTFOUND(id), req, res, callback);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      db.getBy(id,(err, data)=&gt;{
+        <span class="hljs-keyword">if</span>(!data){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Respond with HTTP 404 if no item with such id is present in the table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          response(err, Status.NOTFOUND(id), req, res, callback);
         }<span class="hljs-keyword">else</span>{
-
+          
           response(err, data, req, res, callback);
         }
       });
@@ -353,13 +457,13 @@ jsondb instance [] -&gt; ()</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>Returns Express handler for PUT requests</p>
+              <p>Returns Express handler for PUT requests.</p>
 
             </div>
             
@@ -368,26 +472,95 @@ jsondb instance [] -&gt; ()</p>
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
 
     <span class="hljs-keyword">let</span> {isAll, parts, id} = urlInfo(req);
-    <span class="hljs-keyword">let</span> data = req.body;
+    <span class="hljs-keyword">let</span> data = req.body;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Unlike handleGet, handlePUT (as well as POST and DELETE) pass control to a possible delegate <em>before</em> 
+accesing the table. THis offers the modification of the send/uploaded data before writing to the database file.
+The callback handler, if set, <em>MUST</em> return the data as the return value</p>
 
-    <span class="hljs-keyword">if</span> (callback) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (callback) {
       <span class="hljs-keyword">let</span> data = callback({id, data, url: req.url, isCollection: isAll}, req, res);
-      <span class="hljs-keyword">if</span> (isNone(data)){
-        response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No data returned from Handle'</span>), <span class="hljs-literal">null</span>, req, res);
+      
+      <span class="hljs-keyword">if</span> (isNone(data)){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Fatal error if the callback handler did not return the data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No data returned from Handle'</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
       }
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>In case of a PUT it MUST be an item whitih an id        </p>
 
-    <span class="hljs-keyword">if</span>(isAll) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(isAll) {
       response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot PUT to collection without id"</span>), <span class="hljs-literal">null</span>, req, res, callback);
-    } <span class="hljs-keyword">else</span> {
-      
-      <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){
+    } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Furthermore, it is not allowed to write to the whole collections. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){
         response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot PUT an array to collection"</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
-      }
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Set the id on the data object and store the item to the database table</p>
 
-      data[db.Id] = id;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      data[db.Id] = id;
       db.save(data,(err)=&gt;{
         response(err, Status.OK(data), req, res);
       });
@@ -398,25 +571,39 @@ jsondb instance [] -&gt; ()</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Returns Express handler for DELETE requests
-JsonDb [callback] -&gt; void</p>
+              <p>Returns Express handler for DELETE requests. </p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> handleDELETE = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(db, callback)</span></span>{
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
-    <span class="hljs-keyword">debugger</span>;
+
     <span class="hljs-keyword">let</span> {isAll, parts, id} = urlInfo(req);
        
-    <span class="hljs-keyword">if</span> (callback) {
-      <span class="hljs-keyword">let</span> id = callback({id, url: req.url, isCollection: isAll}, req, res);
+    <span class="hljs-keyword">if</span> (callback) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Unlike the PUT and POST callbacks, the DELETE handler must return a potentially modifued id
+which will be used to delete an item. If none is set, a fatal error will occur.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> id = callback({id, url: req.url, isCollection: isAll}, req, res);
       <span class="hljs-keyword">if</span> (isNone(id)){
         response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No id returned from Handle'</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
@@ -442,13 +629,13 @@ JsonDb [callback] -&gt; void</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Returns Express handler for POST requests</p>
+              <p>Returns Express handler for POST requests.</p>
 
             </div>
             
@@ -465,24 +652,72 @@ JsonDb [callback] -&gt; void</p>
         response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No data returned from Handle'</span>), <span class="hljs-literal">null</span>, req, res);
         <span class="hljs-keyword">return</span>;
       }
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Although a write operation akin to PUT, the semantics of POST differ in the following ways:
+The url must represent a plurar or collection (i.e. ‘path/‘). The request can reporesent:</p>
+<ul>
+<li>an array send in the body of the request will replace (overwrite) the existing table</li>
+<li>an item send with an id will insert/replace an item </li>
+</ul>
 
-    <span class="hljs-keyword">if</span>(isAll) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(isAll) {
       <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){
         db.saveAll(data, (err)=&gt; {
           response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
         });
       } <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">if</span> (!(data[db.Id])){
-          response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`No key '<span class="hljs-subst">${db.Id}</span>' set on data-item`</span>), <span class="hljs-literal">null</span>, req, res);
+        <span class="hljs-keyword">if</span> (!(data[db.Id])){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Fatal error if no id is set on the item. This is a demonstration of the new 
+<a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/template_strings">ES6 ‘template strings’</a>, 
+which support ‘string interpolation’ (variable substitution).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`No key '<span class="hljs-subst">${db.Id}</span>' set on data-item`</span>), <span class="hljs-literal">null</span>, req, res);
         } <span class="hljs-keyword">else</span> {
           db.save(data, (err)=&gt; {
             response(err, Status.OK({data, id, url: req.url, isCollection: isAll}), req, res);
           });
         }
       }
-    } <span class="hljs-keyword">else</span> {
-      response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot POST to single item"</span>), <span class="hljs-literal">null</span>, req, res);
+    } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Fatal error in case the url denotes an item (use PUT in that case)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      response(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Cannot POST to single item"</span>), <span class="hljs-literal">null</span>, req, res);
     }
   };
 };</pre></div></div>
