@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>app.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="jsondb.html">
+                  jsondb.js
+                </a>
+              
+                
+                <a class="source" href="remedata.html">
+                  remedata.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>app.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <blockquote>
+<p>Copyright (c) 2012-2015 Iwan van der Kleijn
+All rights reserved.</p>
+<p>This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree</p>
+</blockquote>
+<p>This file is part of <a href="remedata.html">Remedata</a>
+It is a demo of how Remedata can be used. 
+The application consists of a standard Express 4.* application. Instead of defining function callbacks directly on the 
+Express app routing methods (get, post etc.), a handl </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Import standard ES6 API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> corejs <span class="hljs-keyword">from</span> <span class="hljs-string">'core-js'</span>;
+<span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> bodyParser <span class="hljs-keyword">from</span> <span class="hljs-string">'body-parser'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> remedata <span class="hljs-keyword">from</span> <span class="hljs-string">'./remedata'</span>;
+
+<span class="hljs-keyword">const</span> app = express();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>for parsing application/json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.use(bodyParser.json());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>create json db from file with property ‘id’ as key</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> db = remedata.jsondb(<span class="hljs-string">"data/_data.json"</span>, {key: <span class="hljs-string">"id"</span>});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>define default GET handler; retrieves data from given db
+If the url refers to a plural or collection, i.e. ‘path/‘, the while json file is returned,
+If the url refers to an id, i.e. ‘path/id’, a single item with given id is returned</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.get(<span class="hljs-string">'/men/*'</span>, remedata.handleGET(db));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Define GET handler with callback which is called <em>after</em> db retrieval
+Parameter ‘data’ contains the content of the specific resoure
+In case the callback is given, it is expected that the code returns data to the called
+The return value of the handler has no effect on the further processing of the request</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.get(<span class="hljs-string">'/hombres/*'</span>, remedata.handleGET(db,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data, req, res)</span></span>{
+   <span class="hljs-keyword">let</span> result;
+   <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){                        
+      result = data.map((e)=&gt; {
+        e.beard = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> e;
+      });
+   }
+   <span class="hljs-keyword">else</span> {
+     data.beard = <span class="hljs-literal">true</span>;
+     result = data;
+   }
+   res.json(result);
+}));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Define default PUT handler; writes data with given id in url, i.e. ‘path/id’. Existing items are over-written
+Data should be passed as json formatted data in the request body with content-type ‘application/json’ </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.put(<span class="hljs-string">'/men/*'</span>, remedata.handlePUT(db));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Define PUT handler with callback which is called <em>before</em> db write
+PUT handlers (like POST and DELETE) MUST return modified data as the function result 
+if not, it would not be usefull to define the handler anyway</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.put(<span class="hljs-string">'/hombres/*'</span>, remedata.handlePUT(db,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data, req, res)</span></span>{
+
+   <span class="hljs-keyword">let</span> modified;                        
+   <span class="hljs-keyword">if</span> (data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>){                        
+      modified = data.map((e)=&gt; {
+        e.beard = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> e;
+      });
+   }
+   <span class="hljs-keyword">else</span> {
+     data.beard = <span class="hljs-literal">true</span>;
+     modified = data;
+   }
+
+  <span class="hljs-keyword">return</span> modified;
+}));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Define default POST handler;
+Data should be passed as json formatted data in the request body with content-type ‘application/json’ 
+If the url refers to a plural or collection, i.e. ‘path/‘, the while json file is written to de db (data should be an array)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.post(<span class="hljs-string">'/men/*'</span>, remedata.handlePOST(db));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Define PUT handler with callback which is called <em>before</em> db write.
+Rules for return value of the handle are like those for the PUT handler</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.post(<span class="hljs-string">'/hombres/*'</span>, remedata.handlePOST(db,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data, req, res)</span></span>{
+  data.beard = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">return</span> data;
+}));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Define DELETE handler; deletes data with given id in url, i.e. ‘path/id’. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.delete(<span class="hljs-string">'/men/*'</span>, remedata.handleDELETE(db));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Define PUT handler with callback which is called <em>before</em> db write
+Return value is the actual id of the item to be deleted, but for the remainder 
+the rules for return value of the handle are like those for the PUT handler</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.delete(<span class="hljs-string">'/hombres/*'</span>, remedata.handleDELETE(db,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id, req, res)</span></span>{
+   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'DELETE:'</span>,id);
+   <span class="hljs-keyword">return</span> (id + <span class="hljs-number">1</span>);
+}));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Start test server on port 3000; not needed for Remedata itself</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> server = app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+
+  <span class="hljs-keyword">let</span> host = server.address().address;
+  <span class="hljs-keyword">let</span> port = server.address().port;
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Remedata listening at http://%s:%s'</span>, host, port);
+
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
