@@ -7,11 +7,11 @@
 // > This source code is licensed under the BSD-style license found in the LICENSE file in the root directory of this source tree.
 // 
 // Be aware that Remedata is written in ECMAScript 6 (2015). If to be executed in an ECMAScript 5 compatible run-time, you´ll need
-// [Babel](http://babeljs.org) to compile, or transpile, the source files (in src) to their transformed target files (in dist).
+// [Babel](http://babeljs.io) to compile, or transpile, the source files (in src) to their transformed target files (in dist).
 // For an excellent overview of ES6 see: [https://babeljs.io/docs/learn-es6/](https://babeljs.io/docs/learn-es6/)
 //   
 // ##### Other files included in Remedata
-// Json DB mock [jsondb.html](jsondb.html). 
+// Json DB module [jsondb.html](jsondb.html). 
 // Example: [app.html](app.html)
 
 // ##### Begin remedata.js source

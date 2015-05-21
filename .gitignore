@@ -13,6 +13,6 @@ logs
 results
 node_modules
 npm-debug.log
-dist/
+#dist/
 **/.#*
 **/#*

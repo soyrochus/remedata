@@ -8,7 +8,7 @@ remedata
 > Copyright (c) 2012-2015 Iwan van der Kleijn
 > All rights reserved.
 
-> This source code is licensed under the BSD-style license found at the bottom of this age and in the LICENSE file in the root directory of this source tree.
+> This source code is licensed under the BSD-style license found at the bottom of this page and in the LICENSE file in the root directory of this source tree.
 
 ### Introduction
 
@@ -19,7 +19,7 @@ disk. So a GET method correspond to a READ, a PUT to a WRITE etc. This should be
 ### ECMAScript 6
 
 Remedata is written in ECMAScript 6 (2015). If to be executed in an ECMAScript 5 compatible run-time, you´ll need
- [Babel](http://babeljs.org) to compile, or transpile, the source files (in src) to their transformed target files (in dist). For an excellent overview of ES6 see: [https://babeljs.io/docs/learn-es6/](https://babeljs.io/docs/learn-es6/)
+ [Babel](http://babeljs.io) to compile, or transpile, the source files (in src) to their transformed target files (in dist). For an excellent overview of ES6 see: [https://babeljs.io/docs/learn-es6/](https://babeljs.io/docs/learn-es6/)
 
 ### Install
 
