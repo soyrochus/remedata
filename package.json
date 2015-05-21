@@ -1,6 +1,6 @@
 {
   "name": "remedata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Express middle-ware to create a \"instant on\" Mock web services layer (ReST/Json)",
   "main": "dist/remedata.js",
   "directories": {

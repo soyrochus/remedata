@@ -203,7 +203,7 @@ var JsonDb = (function () {
       if (isNone(data)) {
         callback(new Error('Invalid parameters'));
       }
-      if (data instanceof Array) {
+      if (!(data instanceof Array)) {
         callback(new Error('Data needs to be an Array'));
       }
       this.data = data;

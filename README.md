@@ -3,7 +3,7 @@ remedata
 
 ## Easy Express (Node.js) middle-ware to provide json web-services with mock data-access
 
-##### v 1.0.0 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+##### v 1.0.1 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 
 > Copyright (c) 2012-2015 Iwan van der Kleijn
 > All rights reserved.
