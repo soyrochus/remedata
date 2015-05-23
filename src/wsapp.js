@@ -14,7 +14,7 @@ let db = remedata.jsondb("data/_data.json", {key: "id"});
 
 let bus = sews.startbus({port:9000});
 bus.on('men.read', remedata.handleWsRead(db, 'men.retrieved'));
-
+bus.on('men.write', remedata.handleWsWrite(db,'men.written'));
 
 //bus.on('men.write', remedata.handleWsWrite(db));
 //bus.on('men.process', remedata.handleWsProcess(db));

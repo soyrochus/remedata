@@ -138,7 +138,7 @@ export let handlePUT = function(db, callback){
     // accesing the table. THis offers the modification of the send/uploaded data before writing to the database file.
     // The callback handler, if set, *MUST* return the data as the return value
     if (callback) {
-      let data = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      data = callback({id, data, url: req.url, isCollection: isAll}, req, res);
       
       if (isNone(data)){
         // Fatal error if the callback handler did not return the data
@@ -173,11 +173,11 @@ export let handleDELETE = function(db, callback){
   return function(req, res){
 
     let {isAll, parts, id} = urlInfo(req);
-       
+    
     if (callback) {
       // Unlike the PUT and POST callbacks, the DELETE handler must return a potentially modifued id
       // which will be used to delete an item. If none is set, a fatal error will occur.
-      let id = callback({id, url: req.url, isCollection: isAll}, req, res);
+      id = callback({id, url: req.url, isCollection: isAll}, req, res);
       if (isNone(id)){
         response(new Error('No id returned from Handle'), null, req, res);
         return;
@@ -210,7 +210,7 @@ export let handlePOST = function(db, preprocess, callback){
     let data = req.body;
 
     if (callback) {
-      let data = callback({id, data, url: req.url, isCollection: isAll}, req, res);
+      data = callback({id, data, url: req.url, isCollection: isAll}, req, res);
       if (isNone(data)){
         response(new Error('No data returned from Handle'), null, req, res);
         return;
@@ -247,13 +247,15 @@ export let handlePOST = function(db, preprocess, callback){
 
 let notify = function(err, data, responsetopic, con, callback){
 
+  console.log('notify:', data, responsetopic);
+ 
   // Short-circuit execution if a callback handler is provided: delegate to this function
   if (callback){
     callback(err, data, responsetopic, callback);
   } else {
     // Respond with error message in case of an error
     if(err){
-      con.send('bus.error', data);
+      con.send('bus.error', {state:"error", data:err.message});
     } else{
       con.send(responsetopic, data);
     }
@@ -281,24 +283,21 @@ let state = function(s, data){
   return new State(s, data);
 };
 
-// Returns Express handler for GET requests
-// handleGET (table instance: jsondb.JsonDb), (callback handler: function) : void
+// Returns Sews handler for "request for read" messages
+// handleWsRead (table instance: jsondb.JsonDb), responsetopic: string, (callback handler: function) : void
 export let handleWsRead = function(db, responsetopic, callback){
 
   return function(data, con){
-    console.log("WsRead", data);
-    if(!(data && data.id)) {
+    if(!(data &&  data[db.Id])) {
       
       // Retrieve all items from the table
       db.getAll((err, data)=>{
-        console.log("retrieved data", data);
         notify(err, data, responsetopic, con, callback);
       });
     } else {
       console.log("before retreiving id", data);
       // In case of a data-object with an id, denoting a singular item, i.e. 'data.id', retreive the item by said id
-      db.getBy(data.id,(err, data)=>{
-        console.log("Return data", data);
+      db.getBy(data[db.Id],(err, data)=>{
         if(!data){
 
           notify(err, state('nodata'), responsetopic, con, callback);
@@ -306,6 +305,44 @@ export let handleWsRead = function(db, responsetopic, callback){
           
           notify(err, data, responsetopic, con, callback);
         }
+      });
+    }
+  };
+};
+
+
+// Returns Sews handler for "request for write" messages
+// handleWsWrite(table instance: jsondb.JsonDb), responsetopic: string, (callback handler: function) : void
+export let handleWsWrite = function(db, responsetopic, callback){
+
+  return function(data, con){
+
+    console.log('handleWsWrite', data);
+
+    if (callback) {
+      data = callback(db, responsetopic, data, con);
+      
+      if (isNone(data)){
+        // Fatal error if the callback handler did not return the data
+        notify(new Error('No data returned from Handle'), null,  responsetopic, con);
+        return;
+      }
+    }
+    
+    // In case of a write it MUST be an item whitih an id        
+    if(!(data && data[db.Id])) {
+      notify(new Error("Cannot write to collection without id"), null,  responsetopic, con);
+    } else {
+      
+      // Furthermore, it is not allowed to write to the whole collections. 
+      if (data instanceof Array){
+        notify(new Error("Cannot write an array to collection"), null, responsetopic, con);
+        return;
+      }
+
+      // Set the id on the data object and store the item to the database table
+      db.save(data,(err)=>{
+        notify(err, state("data.written",  data[db.Id]), responsetopic, con);
       });
     }
   };
