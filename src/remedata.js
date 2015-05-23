@@ -1,5 +1,5 @@
 // #### Remedata.js - easy Express middle-ware to provide json web-services with mock data-access
-// ##### v 1.0.0 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+// ##### v 1.0.1 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 // 
 // > Copyright (c) 2012-2015 Iwan van der Kleijn
 // > All rights reserved.
@@ -241,6 +241,72 @@ export let handlePOST = function(db, preprocess, callback){
     } else {
       // Fatal error in case the url denotes an item (use PUT in that case)
       response(new Error("Cannot POST to single item"), null, req, res);
+    }
+  };
+};
+
+let notify = function(err, data, responsetopic, con, callback){
+
+  // Short-circuit execution if a callback handler is provided: delegate to this function
+  if (callback){
+    callback(err, data, responsetopic, callback);
+  } else {
+    // Respond with error message in case of an error
+    if(err){
+      con.send('bus.error', data);
+    } else{
+      con.send(responsetopic, data);
+    }
+  }            
+};
+
+class State {
+
+  constructor(state, data){
+    this.state = state;
+    this.data = data;
+  }
+
+  get State() {
+    return this.state;
+  }
+
+  get Data(){
+    return this.data;
+  }
+}
+
+// nodata
+let state = function(s, data){
+  return new State(s, data);
+};
+
+// Returns Express handler for GET requests
+// handleGET (table instance: jsondb.JsonDb), (callback handler: function) : void
+export let handleWsRead = function(db, responsetopic, callback){
+
+  return function(data, con){
+    console.log("WsRead", data);
+    if(!(data && data.id)) {
+      
+      // Retrieve all items from the table
+      db.getAll((err, data)=>{
+        console.log("retrieved data", data);
+        notify(err, data, responsetopic, con, callback);
+      });
+    } else {
+      console.log("before retreiving id", data);
+      // In case of a data-object with an id, denoting a singular item, i.e. 'data.id', retreive the item by said id
+      db.getBy(data.id,(err, data)=>{
+        console.log("Return data", data);
+        if(!data){
+
+          notify(err, state('nodata'), responsetopic, con, callback);
+        }else{
+          
+          notify(err, data, responsetopic, con, callback);
+        }
+      });
     }
   };
 };
