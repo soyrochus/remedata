@@ -34,6 +34,11 @@
                   remedata.js
                 </a>
               
+                
+                <a class="source" href="wsapp.html">
+                  wsapp.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -500,7 +505,7 @@ appended to the table</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (isNone(data)){
       callback(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Invalid parameters'</span>));
     }
-    <span class="hljs-keyword">if</span> ((data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>)){
+    <span class="hljs-keyword">if</span> (!(data <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>)){
       callback(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Data needs to be an Array'</span>));
     }
     <span class="hljs-keyword">this</span>.data = data;
