@@ -24,46 +24,21 @@ var remedata = _interopRequireWildcard(_remedata);
 // create json db from file with property 'id' as key
 var db = remedata.jsondb('data/_data.json', { key: 'id' });
 
+// Start up server-node (the "Bus")
 var bus = sews.startbus({ port: 9000 });
+
+// define default "read" handler; retrieves data from given db. i.e. equivalent to
+// the HTTP GET Handler
 bus.on('men.read', remedata.handleWsRead(db, 'men.retrieved'));
+
+// define default "write" handler; write single item to given db. i.e. equivalent to
+// the HTTP PUT Handler
 bus.on('men.write', remedata.handleWsWrite(db, 'men.written'));
+
+// define default "process" handler; write data to given db. either in batch mode or
+// a single item. i.e. equivalent to the HTTP POST Handler
 bus.on('men.process', remedata.handleWsProcess(db, 'men.processed'));
+
+// define default "delete" handler; deletes item from given db.i.e. equivalent to the HTTP DELETE Handler
 bus.on('men.delete', remedata.handleWsDelete(db, 'men.deleted'));
-
-/* (data, con)=> {
-  console.log('server received "men.read":', data);
-  con.send('men.changed',"Send from Server");
-  con.send('nahahahaha', "Send from Server as well");
-});
-
-
-bus.on('bus.error', (error) => {
-  console.log('server error: ', error);
-});
-bus.on('bus.unknown', (data) => {
-  console.log('server unkown message: ', data);
-}); 
-
-let counter = 0;
-
-let client = sews.connect('ws://localhost:8080', ()=>{
-  counter++;
-  client.send('men.read', "givemedata: " + counter);
-  //client.send('men.meep', "givemedataaswell");
-});
-
-client.on('men.changed', (data, con)=>{
-  console.log('client received "men.changed"', data);
-  counter++;
-  client.send('men.read', "givemedata: " + counter);
-});
-
-client.on('bus.error', (error) => {
-  console.log('Client error:', error);
-});
-
-client.on('bus.unknown', (data) => {
-  console.log('client unkown message: ', data);
-}); 
-*/
 //# sourceMappingURL=wsapp.js.map
