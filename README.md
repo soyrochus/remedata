@@ -1,9 +1,9 @@
 remedata
 ========
 
-## Easy Express (Node.js) middle-ware to provide json web-services with mock data-access
+## Easy (Node.js) middle-ware to provide an "instant-on" Mock services layer (Express, Sews)
 
-##### v 1.0.1 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
+##### v 1.1.0 - Documentation generated with the lovely [Docco](http://jashkenas.github.com/docco/)
 
 > Copyright (c) 2012-2015 Iwan van der Kleijn
 > All rights reserved.
@@ -12,9 +12,10 @@ remedata
 
 ### Introduction
 
-The basic function of 'remedata' is to quickly create custom Express routing handlers, which allow the automatic loading of one 
-or more JSON files, which then can be treated, though CRUD operations, as in-memory tables and consecutively saved back to
+The basic function of 'remedata' is to quickly create custom Express or Sews handlers for the purpose of quickly creating mock services layers. Express is the well known minimalist web framework for Node.js. Remedata provides Express routing handlers, which allow the automatic loading of one  or more JSON files, which then can be treated, though CRUD operations, as in-memory tables and consecutively saved back to
 disk. So a GET method correspond to a READ, a PUT to a WRITE etc. This should be ideal to quickly, in a few minutes, create an elaborate web service API. 
+
+Sews is a far smaller, insignificant, fish in the node.js pond, but quite useful in its own way. It is a simple eventbus build on top of Web Sockets. Remedata incorporates Sews handlers which, corresponding with their Express counter-parts, provides the functionality to READ, WRITE, DELETE etc. 
 
 ### ECMAScript 6
 
@@ -43,7 +44,7 @@ After this, the sources can be build with a single command:
 
     gulp 
 
-### Tutorial
+### Usage with Express
 
 Let´s take a look at how to create a mock web service with Remedata in more detail. In the following examples we presume that we load the library like this:
  
@@ -136,6 +137,38 @@ app.delete('/hombres/*', remedata.handleDELETE(db,function(id, req, res){
 }));
 
 As well as interacting with given db, req and res objects, it is easy to implement complex database like operations through the JsonDb class as well as the ES 5 and ES 6 Array functions like map, filter, etc.
+
+### Usage with Sews
+
+#### Getting started
+
+Sews can be found on [https://github.com/soyrochus/sews](https://github.com/soyrochus/sews). It can be installed with:
+    
+    npm install sews
+
+A basic server, the "Bus" can be started with:
+
+    var bus = sews.startbus({port:9000});
+
+#### Basic handlers
+
+The following handlers can be defined:
+
+A default "read" handler; retrieves data from given db. i.e. equivalent to the HTTP GET Handler:
+
+    bus.on('men.read', remedata.handleWsRead(db, 'men.retrieved'));
+
+A default "write" handler; write single item to given db. i.e. equivalent to the HTTP PUT Handler:
+
+    bus.on('men.write', remedata.handleWsWrite(db,'men.written'));
+
+A default "process" handler; write data to given db. either in batch mode or  a single item. i.e. equivalent to the HTTP POST Handler:
+
+    bus.on('men.process', remedata.handleWsProcess(db,'men.processed'));
+
+A default "delete" handler; deletes item from given db.i.e. equivalent to the HTTP DELETE Handler:
+
+    bus.on('men.delete', remedata.handleWsDelete(db, 'men.deleted'));
 
 ### The source
 
