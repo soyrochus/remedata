@@ -27,10 +27,8 @@ var db = remedata.jsondb('data/_data.json', { key: 'id' });
 var bus = sews.startbus({ port: 9000 });
 bus.on('men.read', remedata.handleWsRead(db, 'men.retrieved'));
 bus.on('men.write', remedata.handleWsWrite(db, 'men.written'));
-
-//bus.on('men.write', remedata.handleWsWrite(db));
-//bus.on('men.process', remedata.handleWsProcess(db));
-//bus.on('men.delete', remedata.handleWsDelete(db));
+bus.on('men.process', remedata.handleWsProcess(db, 'men.processed'));
+bus.on('men.delete', remedata.handleWsDelete(db, 'men.deleted'));
 
 /* (data, con)=> {
   console.log('server received "men.read":', data);

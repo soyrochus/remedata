@@ -302,7 +302,6 @@ exports.handlePOST = handlePOST;
 var notify = function notify(err, data, responsetopic, con, callback) {
 
   console.log('notify:', data, responsetopic);
-
   // Short-circuit execution if a callback handler is provided: delegate to this function
   if (callback) {
     callback(err, data, responsetopic, callback);
@@ -395,7 +394,7 @@ var handleWsWrite = function handleWsWrite(db, responsetopic, callback) {
       notify(new Error('Cannot write to collection without id'), null, responsetopic, con);
     } else {
 
-      // Furthermore, it is not allowed to write to the whole collections.
+      // Furthermore, it is not allowed to over-write the whole collections.
       if (data instanceof Array) {
         notify(new Error('Cannot write an array to collection'), null, responsetopic, con);
         return;
@@ -408,5 +407,66 @@ var handleWsWrite = function handleWsWrite(db, responsetopic, callback) {
     }
   };
 };
+
 exports.handleWsWrite = handleWsWrite;
+// Returns Sews handler for "request for process" messages
+// handleWsProcess(table instance: jsondb.JsonDb), responsetopic: string, (callback handler: function) : void
+var handleWsProcess = function handleWsProcess(db, responsetopic, callback) {
+
+  return function (data, con) {
+
+    console.log('handleWsProcess', data);
+
+    if (callback) {
+      data = callback(db, responsetopic, data, con);
+
+      if ((0, _jsondb.isNone)(data)) {
+        // Fatal error if the callback handler did not return the data
+        notify(new Error('No data returned from Handle'), null, responsetopic, con);
+        return;
+      }
+    }
+
+    // Over-write who collection
+    if (data instanceof Array) {
+      db.saveAll(data, function (err) {
+        notify(err, data, responsetopic, con);
+      });
+    } else {
+
+      if (!(data && data[db.Id])) {
+        // Fatal error if no data or no id is set on the item. This is a demonstration of the new
+        notify(new Error('No data or no key on data-item'), null, responsetopic, con);
+      } else {
+        db.save(data, function (err) {
+          notify(err, data, responsetopic, con);
+        });
+      }
+    }
+  };
+};
+
+exports.handleWsProcess = handleWsProcess;
+// Returns Sews handler for "request for delete" messages
+// handleWsDelete(table instance: jsondb.JsonDb), responsetopic: string, (callback handler: function) : void
+var handleWsDelete = function handleWsDelete(db, responsetopic, callback) {
+
+  return function (id, con) {
+
+    console.log('handleWsDelete', data);
+
+    if (callback) {
+      id = callback(db, responsetopic, id, con);
+    }
+    if ((0, _jsondb.isNone)(id)) {
+      // Fatal error if the callback handler did not return the id
+      notify(new Error('No key set'), null, responsetopic, con);
+    } else {
+      db['delete'](id, function (err) {
+        notify(err, data, responsetopic, con);
+      });
+    }
+  };
+};
+exports.handleWsDelete = handleWsDelete;
 //# sourceMappingURL=remedata.js.map
